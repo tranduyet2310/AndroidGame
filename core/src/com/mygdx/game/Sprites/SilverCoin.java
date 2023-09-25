@@ -4,15 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.MyGdxGame;
 
 public class SilverCoin extends InteractiveTileObject {
     public SilverCoin(World world, TiledMap map, Rectangle bounds) {
         super(world, map, bounds);
         fixture.setUserData(this);
+        setCategoryFilter(MyGdxGame.SILVER_COIN_BIT);
     }
 
     @Override
     public void onHeadHit() {
         Gdx.app.log("SilverCoin", "Collision");
+        setCategoryFilter(MyGdxGame.COLLECTED_BIT);
+        getCell().setTile(null);
     }
 }

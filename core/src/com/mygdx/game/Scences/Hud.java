@@ -17,12 +17,13 @@ public class Hud implements Disposable {
     private Viewport viewport;
     private Integer worldTimer;
     private float timeCount;
+    private int minutes, seconds;
     Label countdownLabel;
     Label timeLabel;
     Label levelLabel;
     Label worldLabel, landLabel, processLabel;
 
-    public Hud(SpriteBatch sb){
+    public Hud(SpriteBatch sb) {
         worldTimer = 300;
         timeCount = 0;
 
@@ -33,7 +34,11 @@ public class Hud implements Disposable {
         table.top();
         table.setFillParent(true);
 
-        countdownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        // Process time to show
+        minutes = worldTimer / 60;
+        seconds = worldTimer % 60;
+
+        countdownLabel = new Label(String.format("%02d:%02d", minutes, seconds), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         levelLabel = new Label("1-1", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         worldLabel = new Label("MAP", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -56,6 +61,22 @@ public class Hud implements Disposable {
         table.add(countdownLabel).expandX();
 
         stage.addActor(table);
+    }
+
+    public void update(float dt) {
+        timeCount += dt;
+        if(timeCount >= 1){
+            if(worldTimer > 0) worldTimer--;
+
+            minutes = worldTimer /  60;
+            seconds = worldTimer % 60;
+            if(worldTimer == 0){
+                countdownLabel.setText(String.format("00:00"));
+            } else {
+                countdownLabel.setText(String.format("%02d:%02d", minutes, seconds));
+            }
+            timeCount = 0;
+        }
     }
 
     @Override

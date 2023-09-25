@@ -2,6 +2,7 @@ package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -18,8 +19,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.AppPreferences;
+import com.mygdx.game.AudioManager;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Tools.Utils;
 
 public class OptionScreen implements Screen {
     private MyGdxGame game;
@@ -32,6 +34,8 @@ public class OptionScreen implements Screen {
     private CheckBox effectCheckBox, musicCheckBox;
     private TextButton backButton;
     private Skin skin;
+    private Music music;
+    private AudioManager audioManager;
 
     public OptionScreen(final MyGdxGame game) {
         this.game = game;
@@ -53,10 +57,21 @@ public class OptionScreen implements Screen {
         backButton = new TextButton("Back", skin, "round");
 
         updateValue();
+
+        audioManager = AudioManager.getInstance();
+        music = audioManager.getMusic(Utils.MUSIC_MENU);
+        music.setLooping(true);
+        music.setVolume(MyGdxGame.MUSIC_VOLUME);
+
+        System.out.println("OptionScreen on constructor");
     }
 
     @Override
     public void show() {
+        System.out.println("OptionScreen on show()");
+        if (MyGdxGame.IS_MUSIC_ENABLED)
+            music.play();
+
         Gdx.input.setInputProcessor(stage);
 
         Table table = new Table();
@@ -64,9 +79,9 @@ public class OptionScreen implements Screen {
         table.setDebug(true);
         stage.addActor(table);
 
-        musicCheckBox.setChecked(game.getPreferences().isMusicEnabled());
-        effectCheckBox.setChecked(game.getPreferences().isEffectEnabled());
-        volumeMusicSlider.setValue(game.getPreferences().getMusicVolume());
+        musicCheckBox.setChecked(game.IS_MUSIC_ENABLED);
+        effectCheckBox.setChecked(game.IS_SFX_ENABLED);
+        volumeMusicSlider.setValue(game.MUSIC_VOLUME);
 
         table.add(titleLabel).colspan(2);
         table.row();
@@ -86,21 +101,21 @@ public class OptionScreen implements Screen {
         table.add(backButton).colspan(2);
     }
 
-    public void updateValue(){
+    public void updateValue() {
         musicCheckBox.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
                 boolean enabled = musicCheckBox.isChecked();
-                game.getPreferences().setMusicEnabled(enabled);
+                game.IS_MUSIC_ENABLED = enabled;
                 return false;
             }
         });
 
-        musicCheckBox.addListener(new EventListener() {
+        effectCheckBox.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
                 boolean enabled = effectCheckBox.isChecked();
-                game.getPreferences().setEffectEnabled(enabled);
+                game.IS_SFX_ENABLED = enabled;
                 return false;
             }
         });
@@ -108,7 +123,7 @@ public class OptionScreen implements Screen {
         volumeMusicSlider.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                game.getPreferences().setMusicVolume(volumeMusicSlider.getValue());
+                game.MUSIC_VOLUME = volumeMusicSlider.getValue();
                 return false;
             }
         });
@@ -151,13 +166,17 @@ public class OptionScreen implements Screen {
 
     @Override
     public void hide() {
-
+        System.out.println("OptionScreen on hide()");
+        music.stop();
     }
 
     @Override
     public void dispose() {
+        System.out.println("OptionScreen dispose()");
         stage.dispose();
         batch.dispose();
         bg_option.dispose();
+//        music.stop();
+        music.dispose();
     }
 }

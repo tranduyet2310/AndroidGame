@@ -3,37 +3,26 @@ package com.mygdx.game.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.AudioManager;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Scences.Hud;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.B2WorldCreator;
+import com.mygdx.game.Tools.Utils;
 import com.mygdx.game.Tools.WorldContactListener;
-
-import jdk.internal.net.http.common.Log;
 
 public class PlayScreen implements Screen {
 
@@ -51,8 +40,11 @@ public class PlayScreen implements Screen {
     private boolean hasJupmed = false;
     private TiledMapTileLayer mapTileLayer;
     private float evalHeight, evalWidth, totalMapWidth;
-//    public static final Float minZoom = 0.1f;
+    //    public static final Float minZoom = 0.1f;
 //    public static final Float maxZoom = 1f;
+    private Sound sound;
+    private Music music;
+    private AudioManager audioManager;
 
     public PlayScreen(MyGdxGame game) {
 //        atlas = new TextureAtlas("player.atlas");
@@ -82,6 +74,11 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
+        audioManager = AudioManager.getInstance();
+        music = audioManager.getMusic(Utils.MUSIC_LEVEL2);
+        music.setLooping(true);
+        music.setVolume(MyGdxGame.MUSIC_VOLUME);
+
         // get the width and height of map
         int mapWidthInTiles = mapTileLayer.getWidth();
 //        int mapHeightInTiles = mapTileLayer.getHeight();
@@ -105,6 +102,10 @@ public class PlayScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && !hasJupmed) {
             player.b2Body.applyLinearImpulse(new Vector2(0, 4f), player.b2Body.getWorldCenter(), true);
             hasJupmed = true;
+            sound = audioManager.getSound(Utils.SOUND_JUMP);
+            long idSound = sound.play(0.5f);
+            sound.setPitch(idSound, 1);
+            sound.setLooping(idSound, false);
         }
 
         if (player.b2Body.getLinearVelocity().y >= 4)
@@ -129,6 +130,7 @@ public class PlayScreen implements Screen {
         world.step(1 / 60f, 6, 2);
 
         player.update(dt);
+        hud.update(dt);
 
         // attach our gamecam to our player.x and player.y coordinate
 //        gameCam.position.x = player.b2Body.getPosition().x;
@@ -146,7 +148,8 @@ public class PlayScreen implements Screen {
 
     @Override
     public void show() {
-
+        if (MyGdxGame.IS_MUSIC_ENABLED)
+            music.play();
     }
 
 //    public TextureAtlas getAtlas() {
@@ -206,5 +209,8 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+        music.stop();
+        music.dispose();
+        sound.dispose();
     }
 }

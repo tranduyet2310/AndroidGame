@@ -116,6 +116,8 @@ public class Player extends Sprite {
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(12 / MyGdxGame.PPM);
+        fixtureDef.filter.categoryBits = MyGdxGame.PLAYER_BIT;
+        fixtureDef.filter.maskBits = MyGdxGame.DEFAULT_BIT | MyGdxGame.GOLD_COIN_BIT | MyGdxGame.SILVER_COIN_BIT;
 
         fixtureDef.shape = shape;
         b2Body.createFixture(fixtureDef).setUserData("Player");

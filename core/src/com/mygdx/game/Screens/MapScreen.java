@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -28,7 +29,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.AudioManager;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Tools.Utils;
 
 public class MapScreen implements Screen, InputProcessor {
     private MyGdxGame game;
@@ -44,6 +47,8 @@ public class MapScreen implements Screen, InputProcessor {
     private Dialog dialog;
     InputMultiplexer inputMultiplexer;
     private static boolean hasClicked = false;
+    private Music music;
+    private AudioManager audioManager;
 
     public MapScreen(MyGdxGame game) {
         this.game = game;
@@ -120,10 +125,18 @@ public class MapScreen implements Screen, InputProcessor {
 
         inputMultiplexer = new InputMultiplexer();
         stage = new Stage();
+
+        audioManager = AudioManager.getInstance();
+        music = audioManager.getMusic(Utils.MUSIC_LEVEL1);
+        music.setLooping(true);
+        music.setVolume(MyGdxGame.MUSIC_VOLUME);
     }
 
     @Override
     public void show() {
+        if (MyGdxGame.IS_MUSIC_ENABLED)
+            music.play();
+
         inputMultiplexer.addProcessor(MapScreen.this);
         inputMultiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -177,16 +190,19 @@ public class MapScreen implements Screen, InputProcessor {
 
     @Override
     public void hide() {
-
+        music.stop();
     }
 
     @Override
     public void dispose() {
+        System.out.println("MapScreen dispose()");
         map.dispose();
         renderer.dispose();
         world.dispose();
         b2dr.dispose();
         stage.dispose();
+//        music.stop();
+        music.dispose();
     }
 
     public void comparePosition(Rectangle rect, Vector3 touchPoint) {
