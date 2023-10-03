@@ -19,6 +19,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Scences.Hud;
+import com.mygdx.game.Scences.StatusBar;
+import com.mygdx.game.Sprites.Crabby;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.Utils;
@@ -31,17 +33,25 @@ public class PlayScreen implements Screen {
     private OrthographicCamera gameCam;
     private Viewport gamePort;
     private Hud hud;
+    private StatusBar statusBar;
+    //    Tiled map variables
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
+    //    Box2D variables
     private World world;
     private Box2DDebugRenderer b2dr;
+    //    Character
     private Player player;
+    private Crabby crabby;
     private boolean hasJupmed = false;
+    //    Calculate map
     private TiledMapTileLayer mapTileLayer;
     private float evalHeight, evalWidth, totalMapWidth;
-    //    public static final Float minZoom = 0.1f;
+//    public static final Float minZoom = 0.1f;
 //    public static final Float maxZoom = 1f;
+
+    //    Music
     private Sound sound;
     private Music music;
     private AudioManager audioManager;
@@ -55,7 +65,7 @@ public class PlayScreen implements Screen {
         gamePort = new FitViewport(MyGdxGame.V_WIDTH / MyGdxGame.PPM, MyGdxGame.V_HEIGHT / MyGdxGame.PPM, gameCam);
         // Create our game HUD for timer/level info
         hud = new Hud(game.batch);
-
+        statusBar = new StatusBar(game.batch, game);
         // Load our map and setup our map renderer
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("map1.tmx");
@@ -68,9 +78,9 @@ public class PlayScreen implements Screen {
         world = new World(new Vector2(0, -10), true);
         b2dr = new Box2DDebugRenderer();
 
-        new B2WorldCreator(world, map);
+        new B2WorldCreator(this);
 
-        player = new Player(world, this);
+        player = new Player(this);
 
         world.setContactListener(new WorldContactListener());
 
@@ -78,6 +88,8 @@ public class PlayScreen implements Screen {
         music = audioManager.getMusic(Utils.MUSIC_LEVEL2);
         music.setLooping(true);
         music.setVolume(MyGdxGame.MUSIC_VOLUME);
+
+        crabby = new Crabby(this, .32f, .32f);
 
         // get the width and height of map
         int mapWidthInTiles = mapTileLayer.getWidth();
@@ -108,6 +120,13 @@ public class PlayScreen implements Screen {
             sound.setLooping(idSound, false);
         }
 
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            player.isAirAttack = true;
+            sound = audioManager.getSound(Utils.SOUND_ATTACK2);
+            long idSound = sound.play(0.5f);
+            sound.setLooping(idSound, false);
+        } else player.isAirAttack = false;
+
         if (player.b2Body.getLinearVelocity().y >= 4)
             player.b2Body.getLinearVelocity().y = 0;
 
@@ -121,6 +140,13 @@ public class PlayScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2Body.getLinearVelocity().x >= -2) {
             player.b2Body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2Body.getWorldCenter(), true);
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            player.isAttacking = true;
+            sound = audioManager.getSound(Utils.SOUND_ATTACK1);
+            long idSound = sound.play(0.5f);
+            sound.setLooping(idSound, false);
+        } else player.isAttacking = false;
+
     }
 
     public void update(float dt) {
@@ -130,7 +156,9 @@ public class PlayScreen implements Screen {
         world.step(1 / 60f, 6, 2);
 
         player.update(dt);
+        crabby.update(dt);
         hud.update(dt);
+        statusBar.update(dt);
 
         // attach our gamecam to our player.x and player.y coordinate
 //        gameCam.position.x = player.b2Body.getPosition().x;
@@ -175,11 +203,14 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
         player.draw(game.batch);
+        crabby.draw(game.batch);
         game.batch.end();
 
         // Set our batch to now draw what the Hud camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+        statusBar.stage.act();
+        statusBar.stage.draw();
     }
 
     @Override
@@ -187,9 +218,17 @@ public class PlayScreen implements Screen {
         gamePort.update(width, height);
     }
 
+    public TiledMap getMap() {
+        return map;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
     @Override
     public void pause() {
-
+        music.stop();
     }
 
     @Override
@@ -204,13 +243,14 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
+        Gdx.app.log("PlayScreen", "inDispose()");
         map.dispose();
         renderer.dispose();
         world.dispose();
         b2dr.dispose();
         hud.dispose();
         music.stop();
-        music.dispose();
-        sound.dispose();
+//        music.dispose();
+//        sound.dispose();
     }
 }

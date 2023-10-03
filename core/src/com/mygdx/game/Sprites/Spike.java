@@ -8,15 +8,22 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Screens.PlayScreen;
 
 public class Spike extends InteractiveTileObject{
-    public Spike(World world, TiledMap map, Rectangle bounds){
-        super(world, map, bounds);
+    public Spike(PlayScreen screen, Rectangle bounds){
+        super(screen, bounds);
+        setCategoryFilter(MyGdxGame.SPIKE_BIT);
         fixture.setUserData(this);
     }
 
     @Override
     public void onHeadHit() {
         Gdx.app.log("Spike", "Collision");
+    }
+
+    @Override
+    public void onSwordHit() {
+        Gdx.app.log("Spike", "Sword Collision");
     }
 }

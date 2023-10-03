@@ -206,10 +206,10 @@ public class MapScreen implements Screen, InputProcessor {
     }
 
     public void comparePosition(Rectangle rect, Vector3 touchPoint) {
-        Float x = rect.getX() / MyGdxGame.PPM;
-        Float y = rect.getY() / MyGdxGame.PPM;
-        Float w = rect.getWidth() / MyGdxGame.PPM;
-        Float h = rect.getHeight() / MyGdxGame.PPM;
+        float x = rect.getX() / MyGdxGame.PPM;
+        float y = rect.getY() / MyGdxGame.PPM;
+        float w = rect.getWidth() / MyGdxGame.PPM;
+        float h = rect.getHeight() / MyGdxGame.PPM;
 
         if ((touchPoint.x >= x) && (touchPoint.x <= x + w) && ((touchPoint.y >= y) && (touchPoint.y) <= y + h)) {
             hasClicked = true;
@@ -236,10 +236,10 @@ public class MapScreen implements Screen, InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector3 touchPoint = new Vector3(screenX, screenY, 0);
         gameCam.unproject(touchPoint);
-        Float x = rectLustel.getX() / MyGdxGame.PPM;
-        Float y = rectLustel.getY() / MyGdxGame.PPM;
-        Float w = rectLustel.getWidth() / MyGdxGame.PPM;
-        Float h = rectLustel.getHeight() / MyGdxGame.PPM;
+        float x = rectLustel.getX() / MyGdxGame.PPM;
+        float y = rectLustel.getY() / MyGdxGame.PPM;
+        float w = rectLustel.getWidth() / MyGdxGame.PPM;
+        float h = rectLustel.getHeight() / MyGdxGame.PPM;
 
         if ((touchPoint.x >= x) && (touchPoint.x <= x + w) && ((touchPoint.y >= y) && (touchPoint.y) <= y + h)) {
             game.changeScreen(MyGdxGame.PLAY);

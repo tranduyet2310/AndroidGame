@@ -13,21 +13,25 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.StateManager;
 import com.mygdx.game.Tools.Utils;
 
 public class Player extends Sprite {
-    public enum State {FALLING, JUMPING, STANDING, RUNNING};
+    public enum State {FALLING, JUMPING, STANDING, RUNNING, ATTACKING, AIRATTACK, DEAD, HIT}
+    ;
     public State currentState;
     public State previousState;
     public World world;
     public Body b2Body;
     private TextureRegion playerStand;
-    private Animation<TextureRegion> playerRun, playerJump, playerIdle, playerFalling;
+    private Animation<TextureRegion> playerRun, playerJump, playerIdle, playerFalling, playerAttacking, playerAirAttack, playerHit, playerDead;
     private float stateTimer;
     private boolean runningRight;
+    public boolean isAttacking = false;
+    public boolean isAirAttack = false;
 
-    public Player(World world, PlayScreen screen) {
-        this.world = world;
+    public Player(PlayScreen screen) {
+        this.world = screen.getWorld();
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
@@ -53,6 +57,26 @@ public class Player extends Sprite {
             frames.add(new TextureRegion(Utils.getRegion("player/Fall Sword/Fall 0" + i + ".png")));
         }
         playerFalling = new Animation<TextureRegion>(0.3f, frames);
+        frames.clear();
+        for (int i = 1; i <= 9; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Attack 1/Attack 1 0" + i + ".png")));
+        }
+        playerAttacking = new Animation<TextureRegion>(0.3f, frames);
+        frames.clear();
+        for (int i = 1; i <= 6; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Air Attack 1/Air Attack 1 0" + i + ".png")));
+        }
+        playerAirAttack = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 4; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Dead Hit/Dead Hit 0" + i + ".png")));
+        }
+        playerDead = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 4; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Hit Sword/Hit Sword 0" + i + ".png")));
+        }
+        playerHit = new Animation<TextureRegion>(0.4f, frames);
 
         // define player character in Box2d
         definePlayer();
@@ -79,11 +103,22 @@ public class Player extends Sprite {
             case JUMPING:
                 region = playerJump.getKeyFrame(stateTimer);
                 break;
+            case ATTACKING:
+                region = playerAttacking.getKeyFrame(stateTimer);
+                break;
+            case AIRATTACK:
+                region = playerAirAttack.getKeyFrame(stateTimer);
+                break;
+            case HIT:
+                region = playerHit.getKeyFrame(stateTimer);
+                break;
+            case DEAD:
+                region = playerDead.getKeyFrame(stateTimer);
+                break;
             case STANDING:
             default:
                 region = playerIdle.getKeyFrame(stateTimer);
                 break;
-
         }
         if ((b2Body.getLinearVelocity().x < 0 || !runningRight) && !region.isFlipX()) {
             region.flip(true, false);
@@ -98,13 +133,20 @@ public class Player extends Sprite {
     }
 
     public State getState() {
-        if (b2Body.getLinearVelocity().y > 0 || (b2Body.getLinearVelocity().y < 0 && previousState == State.JUMPING))
+        if (b2Body.getLinearVelocity().y > 0 || (b2Body.getLinearVelocity().y < 0 && previousState == State.JUMPING)) {
+            if (isAirAttack) {
+                return State.AIRATTACK;
+            }
             return State.JUMPING;
-        else if (b2Body.getLinearVelocity().y < 0)
+        } else if (b2Body.getLinearVelocity().y < 0)
             return State.FALLING;
         else if (b2Body.getLinearVelocity().x != 0)
             return State.RUNNING;
-        else return State.STANDING;
+        else if (isAttacking) {
+            return State.ATTACKING;
+        } else if (StateManager.playerOnWater) {
+            return State.DEAD;
+        } else return State.STANDING;
     }
 
     public void definePlayer() {
@@ -117,10 +159,17 @@ public class Player extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(12 / MyGdxGame.PPM);
         fixtureDef.filter.categoryBits = MyGdxGame.PLAYER_BIT;
-        fixtureDef.filter.maskBits = MyGdxGame.DEFAULT_BIT | MyGdxGame.GOLD_COIN_BIT | MyGdxGame.SILVER_COIN_BIT;
+        fixtureDef.filter.maskBits = MyGdxGame.GROUND_BIT | MyGdxGame.GOLD_COIN_BIT | MyGdxGame.SILVER_COIN_BIT | MyGdxGame.ENEMY_BIT | MyGdxGame.SPIKE_BIT;
 
         fixtureDef.shape = shape;
         b2Body.createFixture(fixtureDef).setUserData("Player");
+
+        FixtureDef swordDef = new FixtureDef();
+        EdgeShape swordShape = new EdgeShape();
+        swordShape.set(new Vector2((5f) / MyGdxGame.PPM, b2Body.getLocalCenter().y / MyGdxGame.PPM), new Vector2((30f) / MyGdxGame.PPM, b2Body.getLocalCenter().y / MyGdxGame.PPM));
+        swordDef.shape = swordShape;
+        swordDef.isSensor = true;
+        b2Body.createFixture(swordDef).setUserData("Sword");
 
 //        EdgeShape head = new EdgeShape();
 //        head.set(new Vector2(-2 / MyGdxGame.PPM, 10/ MyGdxGame.PPM), new Vector2(2 / MyGdxGame.PPM, 10/ MyGdxGame.PPM));

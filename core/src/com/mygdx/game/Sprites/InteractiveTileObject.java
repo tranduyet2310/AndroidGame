@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Screens.PlayScreen;
 
 public abstract class InteractiveTileObject {
     protected World world;
@@ -20,15 +21,18 @@ public abstract class InteractiveTileObject {
     protected Rectangle bounds;
     protected Body body;
     protected Fixture fixture;
+    protected FixtureDef fixtureDef;
+    protected BodyDef bodyDef;
+    protected PolygonShape shape;
 
-    public InteractiveTileObject(World world, TiledMap map, Rectangle bounds) {
-        this.world = world;
-        this.map = map;
+    public InteractiveTileObject(PlayScreen screen, Rectangle bounds) {
+        this.world = screen.getWorld();
+        this.map = screen.getMap();
         this.bounds = bounds;
 
-        BodyDef bodyDef = new BodyDef();
-        FixtureDef fixtureDef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
+        bodyDef = new BodyDef();
+        fixtureDef = new FixtureDef();
+        shape = new PolygonShape();
 
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set((bounds.getX() + bounds.getWidth() / 2) / MyGdxGame.PPM, (bounds.getY() + bounds.getHeight() / 2) / MyGdxGame.PPM);
@@ -40,6 +44,8 @@ public abstract class InteractiveTileObject {
     }
 
     public abstract void onHeadHit();
+
+    public abstract void onSwordHit();
 
     public void setCategoryFilter(short filterBit) {
         Filter filter = new Filter();

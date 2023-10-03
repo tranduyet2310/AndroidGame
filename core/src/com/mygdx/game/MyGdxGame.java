@@ -1,14 +1,8 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Screens.MapScreen;
 import com.mygdx.game.Screens.MenuScreen;
 import com.mygdx.game.Screens.OptionScreen;
@@ -29,17 +23,21 @@ public class MyGdxGame extends Game {
     public static final int STATISTIC = 3;
     public static final int STORY = 4;
     public static final int MENU = 5;
+    public static final int MENU_DISPOSE = 6;
+    public static final int PLAY_DISPOSE = 7;
 
     public static final int V_WIDTH = 1280;
     public static final int V_HEIGHT = 768;
     public static final float PPM = 100;
     public SpriteBatch batch;
-
-    public static final short DEFAULT_BIT = 1;
+    // Box2D Collision Bits
+    public static final short GROUND_BIT = 1;
     public static final short PLAYER_BIT = 2;
     public static final short SILVER_COIN_BIT = 4;
     public static final short GOLD_COIN_BIT = 8;
     public static final short COLLECTED_BIT = 16;
+    public static final short SPIKE_BIT = 32;
+    public static final short ENEMY_BIT = 64;
 
     private Screen currentScreen;
     private AudioManager audioManager;
@@ -89,6 +87,16 @@ public class MyGdxGame extends Game {
                     menuScreen = new MenuScreen(this);
 //				currentScreen = (Screen) menuScreen;
                 this.setScreen(menuScreen);
+                break;
+            case MENU_DISPOSE:
+                playScreen.pause();
+                if (menuScreen == null)
+                    menuScreen = new MenuScreen(this);
+                this.setScreen(menuScreen);
+                break;
+            case PLAY_DISPOSE:
+                playScreen = new PlayScreen(this);
+                this.setScreen(playScreen);
                 break;
         }
     }

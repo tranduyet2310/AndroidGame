@@ -10,12 +10,16 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.SilverCoin;
 import com.mygdx.game.Sprites.Spike;
 import com.mygdx.game.Sprites.Water;
 
 public class B2WorldCreator {
-    public B2WorldCreator(World world, TiledMap map){
+    public B2WorldCreator(PlayScreen screen){
+        World world = screen.getWorld();
+        TiledMap map = screen.getMap();
+        //
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
@@ -34,17 +38,17 @@ public class B2WorldCreator {
         // Create water bodies fixtures
         for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Water(world, map, rect);
+            new Water(screen, rect);
         }
         // Create spike boides fixture
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Spike(world, map, rect);
+            new Spike(screen, rect);
         }
         // Create special item boides fixture
         for (MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new SilverCoin(world, map, rect);
+            new SilverCoin(screen, rect);
         }
     }
 }

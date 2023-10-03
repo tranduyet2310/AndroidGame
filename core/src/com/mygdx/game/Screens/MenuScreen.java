@@ -107,7 +107,7 @@ public class MenuScreen implements Screen {
         sprite.draw(batch);
         batch.end();
 
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30));
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / (30 * 1.0f)));
         stage.draw();
     }
 
@@ -137,7 +137,6 @@ public class MenuScreen implements Screen {
         stage.dispose();
         batch.dispose();
         bg_menu.dispose();
-//        music.stop();
         music.dispose();
     }
 }

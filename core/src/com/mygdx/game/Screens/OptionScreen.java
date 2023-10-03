@@ -79,9 +79,9 @@ public class OptionScreen implements Screen {
         table.setDebug(true);
         stage.addActor(table);
 
-        musicCheckBox.setChecked(game.IS_MUSIC_ENABLED);
-        effectCheckBox.setChecked(game.IS_SFX_ENABLED);
-        volumeMusicSlider.setValue(game.MUSIC_VOLUME);
+        musicCheckBox.setChecked(MyGdxGame.IS_MUSIC_ENABLED);
+        effectCheckBox.setChecked(MyGdxGame.IS_SFX_ENABLED);
+        volumeMusicSlider.setValue(MyGdxGame.MUSIC_VOLUME);
 
         table.add(titleLabel).colspan(2);
         table.row();
@@ -105,8 +105,7 @@ public class OptionScreen implements Screen {
         musicCheckBox.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                boolean enabled = musicCheckBox.isChecked();
-                game.IS_MUSIC_ENABLED = enabled;
+                MyGdxGame.IS_MUSIC_ENABLED = musicCheckBox.isChecked();
                 return false;
             }
         });
@@ -114,8 +113,7 @@ public class OptionScreen implements Screen {
         effectCheckBox.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                boolean enabled = effectCheckBox.isChecked();
-                game.IS_SFX_ENABLED = enabled;
+                MyGdxGame.IS_SFX_ENABLED = effectCheckBox.isChecked();
                 return false;
             }
         });
@@ -123,7 +121,7 @@ public class OptionScreen implements Screen {
         volumeMusicSlider.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                game.MUSIC_VOLUME = volumeMusicSlider.getValue();
+                MyGdxGame.MUSIC_VOLUME = volumeMusicSlider.getValue();
                 return false;
             }
         });
@@ -145,7 +143,7 @@ public class OptionScreen implements Screen {
         sprite.draw(batch);
         batch.end();
 
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30));
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / (30 * 1.0f)));
         stage.draw();
     }
 
@@ -176,7 +174,6 @@ public class OptionScreen implements Screen {
         stage.dispose();
         batch.dispose();
         bg_option.dispose();
-//        music.stop();
         music.dispose();
     }
 }
