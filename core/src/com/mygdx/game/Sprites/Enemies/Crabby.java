@@ -1,4 +1,4 @@
-package com.mygdx.game.Sprites;
+package com.mygdx.game.Sprites.Enemies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -10,7 +10,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.StateManager;
 import com.mygdx.game.Tools.Utils;
 
 public class Crabby extends Enemy {
@@ -30,7 +29,6 @@ public class Crabby extends Enemy {
     //
     private boolean setToDestroy;
     private boolean destroyed;
-
 
     public Crabby(PlayScreen screen, float x, float y) {
         super(screen, x, y);
@@ -135,8 +133,8 @@ public class Crabby extends Enemy {
     @Override
     protected void defineEnemy() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(330 / MyGdxGame.PPM, 320 / MyGdxGame.PPM);
-//        bodyDef.position.set(getX(), getY());
+//        bodyDef.position.set(330 / MyGdxGame.PPM, 320 / MyGdxGame.PPM);
+        bodyDef.position.set(getX(), getY());
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bodyDef);
 
@@ -160,7 +158,8 @@ public class Crabby extends Enemy {
 
     @Override
     public void hitEnemy() {
-        //setToDestroy = true;
+        isDead = true;
+        setToDestroy = true;
         Gdx.app.log("Crabby: ", "DEAD");
     }
 }

@@ -14,17 +14,23 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Scences.Hud;
 import com.mygdx.game.Scences.StatusBar;
-import com.mygdx.game.Sprites.Crabby;
+import com.mygdx.game.Sprites.Enemies.Enemy;
+import com.mygdx.game.Sprites.Items.GoldCoin;
+import com.mygdx.game.Sprites.Items.Item;
+import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.Utils;
 import com.mygdx.game.Tools.WorldContactListener;
+
+import java.util.PriorityQueue;
 
 public class PlayScreen implements Screen {
 
@@ -41,9 +47,9 @@ public class PlayScreen implements Screen {
     //    Box2D variables
     private World world;
     private Box2DDebugRenderer b2dr;
+    private B2WorldCreator creator;
     //    Character
     private Player player;
-    private Crabby crabby;
     private boolean hasJupmed = false;
     //    Calculate map
     private TiledMapTileLayer mapTileLayer;
@@ -55,6 +61,9 @@ public class PlayScreen implements Screen {
     private Sound sound;
     private Music music;
     private AudioManager audioManager;
+    // Item
+    private Array<Item> items;
+    private PriorityQueue<ItemDef> itemsToSpawn;
 
     public PlayScreen(MyGdxGame game) {
 //        atlas = new TextureAtlas("player.atlas");
@@ -78,7 +87,7 @@ public class PlayScreen implements Screen {
         world = new World(new Vector2(0, -10), true);
         b2dr = new Box2DDebugRenderer();
 
-        new B2WorldCreator(this);
+        creator = new B2WorldCreator(this);
 
         player = new Player(this);
 
@@ -89,7 +98,6 @@ public class PlayScreen implements Screen {
         music.setLooping(true);
         music.setVolume(MyGdxGame.MUSIC_VOLUME);
 
-        crabby = new Crabby(this, .32f, .32f);
 
         // get the width and height of map
         int mapWidthInTiles = mapTileLayer.getWidth();
@@ -107,7 +115,23 @@ public class PlayScreen implements Screen {
 //        gameCam.position.x = MathUtils.clamp(gameCam.position.x, evalWidth / 2f, totalMapWidth - evalWidth / 2f);
 //        gameCam.position.y = MathUtils.clamp(gameCam.position.y, evalHeight / 2f, MyGdxGame.V_HEIGHT - evalHeight / 2f);
 //        gameCam.zoom = MathUtils.clamp(gameCam.zoom, minZoom, maxZoom);
+        items = new Array<Item>();
+        itemsToSpawn = new PriorityQueue<ItemDef>();
 
+    }
+
+    public void spwanItem(ItemDef idef) {
+        itemsToSpawn.add(idef);
+    }
+
+    public void handleSpwaningItems() {
+        if (!itemsToSpawn.isEmpty()) {
+            ItemDef idef = itemsToSpawn.poll();
+            if(idef.type == GoldCoin.class){
+                items.add(new GoldCoin(this, idef.position.x, idef.position.y));
+            }
+
+        }
     }
 
     public void handleInput(float dt) {
@@ -152,11 +176,22 @@ public class PlayScreen implements Screen {
     public void update(float dt) {
         // handle user input first
         handleInput(dt);
+        handleSpwaningItems();
         // take 1 step in the physics simulation (60 times per second)
         world.step(1 / 60f, 6, 2);
 
         player.update(dt);
-        crabby.update(dt);
+
+        for (Enemy enemy : creator.getCrabbies()) {
+            enemy.update(dt);
+            if (enemy.getX() < player.getX() + 320 / MyGdxGame.PPM)
+                enemy.b2body.setActive(true);
+        }
+
+        for (Item item : items){
+            item.update(dt);
+        }
+
         hud.update(dt);
         statusBar.update(dt);
 
@@ -203,7 +238,15 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
         player.draw(game.batch);
-        crabby.draw(game.batch);
+
+        for (Enemy enemy : creator.getCrabbies()) {
+            enemy.draw(game.batch);
+        }
+
+        for (Item item : items){
+            item.draw(game.batch);
+        }
+
         game.batch.end();
 
         // Set our batch to now draw what the Hud camera sees

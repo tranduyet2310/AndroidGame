@@ -5,8 +5,8 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.mygdx.game.Sprites.Enemy;
-import com.mygdx.game.Sprites.InteractiveTileObject;
+import com.mygdx.game.Sprites.Enemies.Enemy;
+import com.mygdx.game.Sprites.TileObjects.InteractiveTileObject;
 
 import com.mygdx.game.MyGdxGame;
 
@@ -52,6 +52,11 @@ public class WorldContactListener implements ContactListener {
                     ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
                 }
                 break;
+            case MyGdxGame.ENEMY_BIT | MyGdxGame.ENEMY_BIT:
+                ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
+                ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
+                break;
+
         }
 
     }
