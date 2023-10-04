@@ -2,15 +2,11 @@ package com.mygdx.game.Scences;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -21,8 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.Screens.MapScreen;
 
 public class StatusBar implements Disposable {
     public Stage stage;
@@ -35,7 +31,7 @@ public class StatusBar implements Disposable {
 
     public StatusBar(SpriteBatch sb, final MyGdxGame game) {
         Gdx.app.log("StatusBar", "onConstructor");
-        Viewport viewport = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
+        Viewport viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
@@ -86,13 +82,13 @@ public class StatusBar implements Disposable {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 check = false;
-                game.changeScreen(MyGdxGame.MENU_DISPOSE);
+                game.changeScreen(Constants.MENU_DISPOSE);
             }
         });
         btnReset.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.changeScreen(MyGdxGame.PLAY_DISPOSE);
+                game.changeScreen(Constants.PLAY_DISPOSE);
             }
         });
         btnContinue.addListener(new ClickListener() {

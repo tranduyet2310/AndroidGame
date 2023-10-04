@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Tools.Utils;
 
@@ -33,7 +33,7 @@ public class Crabby extends Enemy {
     public Crabby(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         stateTime = 0;
-        setBounds(getX(), getY(), 72 / MyGdxGame.PPM, 32 / MyGdxGame.PPM);
+        setBounds(getX(), getY(), 72 / Constants.PPM, 32 / Constants.PPM);
         setToDestroy = false;
         destroyed = false;
         //
@@ -140,11 +140,11 @@ public class Crabby extends Enemy {
 
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(12 / MyGdxGame.PPM);
-        fixtureDef.filter.categoryBits = MyGdxGame.ENEMY_BIT;
-        fixtureDef.filter.maskBits = MyGdxGame.GROUND_BIT |
-                MyGdxGame.GOLD_COIN_BIT | MyGdxGame.SILVER_COIN_BIT
-                | MyGdxGame.SPIKE_BIT | MyGdxGame.ENEMY_BIT | MyGdxGame.PLAYER_BIT;
+        shape.setRadius(12 / Constants.PPM);
+        fixtureDef.filter.categoryBits = Constants.ENEMY_BIT;
+        fixtureDef.filter.maskBits = Constants.GROUND_BIT |
+                Constants.GOLD_COIN_BIT | Constants.SILVER_COIN_BIT
+                | Constants.SPIKE_BIT | Constants.ENEMY_BIT | Constants.PLAYER_BIT;
 
         fixtureDef.shape = shape;
         b2body.createFixture(fixtureDef).setUserData(this);

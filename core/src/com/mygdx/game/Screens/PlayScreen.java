@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
+import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Scences.Hud;
 import com.mygdx.game.Scences.StatusBar;
@@ -25,12 +26,14 @@ import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.GoldCoin;
 import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Sprites.Items.ItemDef;
+import com.mygdx.game.Sprites.Items.SilverCoin;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.Utils;
 import com.mygdx.game.Tools.WorldContactListener;
 
 import java.util.PriorityQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class PlayScreen implements Screen {
 
@@ -63,7 +66,7 @@ public class PlayScreen implements Screen {
     private AudioManager audioManager;
     // Item
     private Array<Item> items;
-    private PriorityQueue<ItemDef> itemsToSpawn;
+    private LinkedBlockingDeque<ItemDef> itemsToSpawn;
 
     public PlayScreen(MyGdxGame game) {
 //        atlas = new TextureAtlas("player.atlas");
@@ -71,7 +74,7 @@ public class PlayScreen implements Screen {
         // Create cam used to follow player through cam world
         gameCam = new OrthographicCamera();
         // Create a FitViewport to maintain virtual aspect ratio despite screen size
-        gamePort = new FitViewport(MyGdxGame.V_WIDTH / MyGdxGame.PPM, MyGdxGame.V_HEIGHT / MyGdxGame.PPM, gameCam);
+        gamePort = new FitViewport(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM, gameCam);
         // Create our game HUD for timer/level info
         hud = new Hud(game.batch);
         statusBar = new StatusBar(game.batch, game);
@@ -79,7 +82,7 @@ public class PlayScreen implements Screen {
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("map1.tmx");
         mapTileLayer = (TiledMapTileLayer) map.getLayers().get(1);
-        renderer = new OrthogonalTiledMapRenderer(map, 1 / MyGdxGame.PPM);
+        renderer = new OrthogonalTiledMapRenderer(map, 1 / Constants.PPM);
 
         // initially set our gameCam to be centered correctly at the start of
         gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
@@ -89,7 +92,8 @@ public class PlayScreen implements Screen {
 
         creator = new B2WorldCreator(this);
 
-        player = new Player(this);
+//        player = new Player(this);
+        player = creator.getPlayer();
 
         world.setContactListener(new WorldContactListener());
 
@@ -106,7 +110,7 @@ public class PlayScreen implements Screen {
         float tileWidth = mapTileLayer.getTileWidth();
 //        float tileHeight = mapTileLayer.getTileHeight();
         // Caculate the width and height of the map in pixel (Fix sẵn độ dài và rộng mã khi thiết kế rồi nền để nguyên luôn)
-        totalMapWidth = mapWidthInTiles * tileWidth / MyGdxGame.PPM;
+        totalMapWidth = mapWidthInTiles * tileWidth / Constants.PPM;
 //        totalMapHeight = mapHeightInTiles * tileHeight;
 
 //        evalWidth = gamePort.getWorldWidth() * gameCam.zoom;
@@ -116,7 +120,7 @@ public class PlayScreen implements Screen {
 //        gameCam.position.y = MathUtils.clamp(gameCam.position.y, evalHeight / 2f, MyGdxGame.V_HEIGHT - evalHeight / 2f);
 //        gameCam.zoom = MathUtils.clamp(gameCam.zoom, minZoom, maxZoom);
         items = new Array<Item>();
-        itemsToSpawn = new PriorityQueue<ItemDef>();
+        itemsToSpawn = new LinkedBlockingDeque<ItemDef>();
 
     }
 
@@ -129,6 +133,8 @@ public class PlayScreen implements Screen {
             ItemDef idef = itemsToSpawn.poll();
             if(idef.type == GoldCoin.class){
                 items.add(new GoldCoin(this, idef.position.x, idef.position.y));
+            } else if (idef.type == SilverCoin.class) {
+                items.add(new SilverCoin(this, idef.position.x, idef.position.y));
             }
 
         }
@@ -184,7 +190,7 @@ public class PlayScreen implements Screen {
 
         for (Enemy enemy : creator.getCrabbies()) {
             enemy.update(dt);
-            if (enemy.getX() < player.getX() + 320 / MyGdxGame.PPM)
+            if (enemy.getX() < player.getX() + 320 / Constants.PPM)
                 enemy.b2body.setActive(true);
         }
 

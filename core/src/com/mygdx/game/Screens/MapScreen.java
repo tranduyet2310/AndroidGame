@@ -30,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
+import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Tools.Utils;
 
@@ -55,11 +56,11 @@ public class MapScreen implements Screen, InputProcessor {
         // Create cam used to follow player through cam world
         gameCam = new OrthographicCamera();
         // Create a FitViewport to maintain virtual aspect ratio despite screen size
-        gamePort = new FillViewport(MyGdxGame.V_WIDTH / MyGdxGame.PPM, MyGdxGame.V_HEIGHT / MyGdxGame.PPM, gameCam);
+        gamePort = new FillViewport(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM, gameCam);
         // Load our map and setup our map renderer
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("world_map.tmx");
-        renderer = new OrthogonalTiledMapRenderer(map, 1 / MyGdxGame.PPM);
+        renderer = new OrthogonalTiledMapRenderer(map, 1 / Constants.PPM);
         // initially set our gameCam to be centered correctly at the start of
         gameCam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
@@ -75,9 +76,9 @@ public class MapScreen implements Screen, InputProcessor {
         for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
             rectLustel = ((RectangleMapObject) object).getRectangle();
             bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rectLustel.getX() + rectLustel.getWidth() / 2) / MyGdxGame.PPM, (rectLustel.getY() + rectLustel.getHeight() / 2) / MyGdxGame.PPM);
+            bdef.position.set((rectLustel.getX() + rectLustel.getWidth() / 2) / Constants.PPM, (rectLustel.getY() + rectLustel.getHeight() / 2) / Constants.PPM);
             body = world.createBody(bdef);
-            shape.setAsBox(rectLustel.getWidth() / 2 / MyGdxGame.PPM, rectLustel.getHeight() / 2 / MyGdxGame.PPM);
+            shape.setAsBox(rectLustel.getWidth() / 2 / Constants.PPM, rectLustel.getHeight() / 2 / Constants.PPM);
             fdef.shape = shape;
             body.createFixture(fdef);
         }
@@ -85,9 +86,9 @@ public class MapScreen implements Screen, InputProcessor {
         for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
             rectRodaphite = ((RectangleMapObject) object).getRectangle();
             bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rectRodaphite.getX() + rectRodaphite.getWidth() / 2) / MyGdxGame.PPM, (rectRodaphite.getY() + rectRodaphite.getHeight() / 2) / MyGdxGame.PPM);
+            bdef.position.set((rectRodaphite.getX() + rectRodaphite.getWidth() / 2) / Constants.PPM, (rectRodaphite.getY() + rectRodaphite.getHeight() / 2) / Constants.PPM);
             body = world.createBody(bdef);
-            shape.setAsBox(rectRodaphite.getWidth() / 2 / MyGdxGame.PPM, rectRodaphite.getHeight() / 2 / MyGdxGame.PPM);
+            shape.setAsBox(rectRodaphite.getWidth() / 2 / Constants.PPM, rectRodaphite.getHeight() / 2 / Constants.PPM);
             fdef.shape = shape;
             body.createFixture(fdef);
         }
@@ -95,9 +96,9 @@ public class MapScreen implements Screen, InputProcessor {
         for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
             rectTarish = ((RectangleMapObject) object).getRectangle();
             bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rectTarish.getX() + rectTarish.getWidth() / 2) / MyGdxGame.PPM, (rectTarish.getY() + rectTarish.getHeight() / 2) / MyGdxGame.PPM);
+            bdef.position.set((rectTarish.getX() + rectTarish.getWidth() / 2) / Constants.PPM, (rectTarish.getY() + rectTarish.getHeight() / 2) / Constants.PPM);
             body = world.createBody(bdef);
-            shape.setAsBox(rectTarish.getWidth() / 2 / MyGdxGame.PPM, rectTarish.getHeight() / 2 / MyGdxGame.PPM);
+            shape.setAsBox(rectTarish.getWidth() / 2 / Constants.PPM, rectTarish.getHeight() / 2 / Constants.PPM);
             fdef.shape = shape;
             body.createFixture(fdef);
 
@@ -106,9 +107,9 @@ public class MapScreen implements Screen, InputProcessor {
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             rectTuran = ((RectangleMapObject) object).getRectangle();
             bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rectTuran.getX() + rectTuran.getWidth() / 2) / MyGdxGame.PPM, (rectTuran.getY() + rectTuran.getHeight() / 2) / MyGdxGame.PPM);
+            bdef.position.set((rectTuran.getX() + rectTuran.getWidth() / 2) / Constants.PPM, (rectTuran.getY() + rectTuran.getHeight() / 2) / Constants.PPM);
             body = world.createBody(bdef);
-            shape.setAsBox(rectTuran.getWidth() / 2 / MyGdxGame.PPM, rectTuran.getHeight() / 2 / MyGdxGame.PPM);
+            shape.setAsBox(rectTuran.getWidth() / 2 / Constants.PPM, rectTuran.getHeight() / 2 / Constants.PPM);
             fdef.shape = shape;
             body.createFixture(fdef);
         }
@@ -116,9 +117,9 @@ public class MapScreen implements Screen, InputProcessor {
         for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             rectAstarte = ((RectangleMapObject) object).getRectangle();
             bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rectAstarte.getX() + rectAstarte.getWidth() / 2) / MyGdxGame.PPM, (rectAstarte.getY() + rectAstarte.getHeight() / 2) / MyGdxGame.PPM);
+            bdef.position.set((rectAstarte.getX() + rectAstarte.getWidth() / 2) / Constants.PPM, (rectAstarte.getY() + rectAstarte.getHeight() / 2) / Constants.PPM);
             body = world.createBody(bdef);
-            shape.setAsBox(rectAstarte.getWidth() / 2 / MyGdxGame.PPM, rectAstarte.getHeight() / 2 / MyGdxGame.PPM);
+            shape.setAsBox(rectAstarte.getWidth() / 2 / Constants.PPM, rectAstarte.getHeight() / 2 / Constants.PPM);
             fdef.shape = shape;
             body.createFixture(fdef);
         }
@@ -206,10 +207,10 @@ public class MapScreen implements Screen, InputProcessor {
     }
 
     public void comparePosition(Rectangle rect, Vector3 touchPoint) {
-        float x = rect.getX() / MyGdxGame.PPM;
-        float y = rect.getY() / MyGdxGame.PPM;
-        float w = rect.getWidth() / MyGdxGame.PPM;
-        float h = rect.getHeight() / MyGdxGame.PPM;
+        float x = rect.getX() / Constants.PPM;
+        float y = rect.getY() / Constants.PPM;
+        float w = rect.getWidth() / Constants.PPM;
+        float h = rect.getHeight() / Constants.PPM;
 
         if ((touchPoint.x >= x) && (touchPoint.x <= x + w) && ((touchPoint.y >= y) && (touchPoint.y) <= y + h)) {
             hasClicked = true;
@@ -236,13 +237,13 @@ public class MapScreen implements Screen, InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector3 touchPoint = new Vector3(screenX, screenY, 0);
         gameCam.unproject(touchPoint);
-        float x = rectLustel.getX() / MyGdxGame.PPM;
-        float y = rectLustel.getY() / MyGdxGame.PPM;
-        float w = rectLustel.getWidth() / MyGdxGame.PPM;
-        float h = rectLustel.getHeight() / MyGdxGame.PPM;
+        float x = rectLustel.getX() / Constants.PPM;
+        float y = rectLustel.getY() / Constants.PPM;
+        float w = rectLustel.getWidth() / Constants.PPM;
+        float h = rectLustel.getHeight() / Constants.PPM;
 
         if ((touchPoint.x >= x) && (touchPoint.x <= x + w) && ((touchPoint.y >= y) && (touchPoint.y) <= y + h)) {
-            game.changeScreen(MyGdxGame.PLAY);
+            game.changeScreen(Constants.PLAY);
         } else {
             comparePosition(rectRodaphite, touchPoint);
             comparePosition(rectTarish, touchPoint);

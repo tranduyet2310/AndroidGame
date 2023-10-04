@@ -10,15 +10,18 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Crabby;
-import com.mygdx.game.Sprites.Items.SilverCoin;
+import com.mygdx.game.Sprites.Player;
+import com.mygdx.game.Sprites.TileObjects.MerchantShip;
+import com.mygdx.game.Sprites.TileObjects.SpecialItem;
 import com.mygdx.game.Sprites.TileObjects.Spike;
 import com.mygdx.game.Sprites.TileObjects.Water;
 
 public class B2WorldCreator {
     private Array<Crabby> crabbies;
+    private Player player;
 
     public B2WorldCreator(PlayScreen screen) {
         World world = screen.getWorld();
@@ -33,36 +36,58 @@ public class B2WorldCreator {
         for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) / MyGdxGame.PPM, (rect.getY() + rect.getHeight() / 2) / MyGdxGame.PPM);
+            bdef.position.set((rect.getX() + rect.getWidth() / 2) / Constants.PPM, (rect.getY() + rect.getHeight() / 2) / Constants.PPM);
             body = world.createBody(bdef);
-            shape.setAsBox(rect.getWidth() / 2 / MyGdxGame.PPM, rect.getHeight() / 2 / MyGdxGame.PPM);
+            shape.setAsBox(rect.getWidth() / 2 / Constants.PPM, rect.getHeight() / 2 / Constants.PPM);
             fdef.shape = shape;
             body.createFixture(fdef);
         }
         // Create water bodies fixtures
         for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Water(screen, rect);
+            new Water(screen, object);
         }
         // Create spike boides fixture
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Spike(screen, rect);
+            new Spike(screen, object);
         }
+//        // Create NPC boides fixture
+//        for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
+//            new SpecialItem(screen, object);
+//        }
         // Create special item boides fixture
         for (MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new SilverCoin(screen, rect);
+            new SpecialItem(screen, object);
         }
         // Create Crabby boides fixture
         crabbies = new Array<Crabby>();
         for (MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            crabbies.add(new Crabby(screen, rect.getX() / MyGdxGame.PPM, rect.getY() / MyGdxGame.PPM));
+            crabbies.add(new Crabby(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+        }
+//        // Create box boides fixture
+//        for (MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
+//            new SpecialItem(screen, object);
+//        }
+//        // Create barrel boides fixture
+//        for (MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
+//            new SpecialItem(screen, object);
+//        }
+        // Create merchant ship boides fixture
+        for (MapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
+            new MerchantShip(screen, object);
+        }
+        // Create player boides fixture
+        for (MapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            player = new Player(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM);
         }
     }
 
     public Array<Crabby> getCrabbies() {
         return crabbies;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

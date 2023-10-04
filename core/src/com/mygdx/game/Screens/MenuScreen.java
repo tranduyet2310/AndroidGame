@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.AudioManager;
+import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Tools.Utils;
 
@@ -32,7 +33,7 @@ public class MenuScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         bg_menu = new Texture(Gdx.files.internal("resource/bg_menu.png"));
         sprite = new Sprite(bg_menu);
-        sprite.setPosition(MyGdxGame.V_WIDTH / MyGdxGame.PPM, MyGdxGame.V_HEIGHT / MyGdxGame.PPM);
+        sprite.setPosition(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM);
         batch = new SpriteBatch();
 
         audioManager = AudioManager.getInstance();
@@ -79,21 +80,21 @@ public class MenuScreen implements Screen {
         play.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.changeScreen(MyGdxGame.MAP);
+                game.changeScreen(Constants.MAP);
             }
         });
 
         option.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.changeScreen(MyGdxGame.OPTION);
+                game.changeScreen(Constants.OPTION);
             }
         });
 
         statistic.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.changeScreen(MyGdxGame.STATISTIC);
+                game.changeScreen(Constants.STATISTIC);
             }
         });
     }

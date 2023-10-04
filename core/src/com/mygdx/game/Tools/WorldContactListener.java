@@ -5,10 +5,11 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.mygdx.game.Constants;
 import com.mygdx.game.Sprites.Enemies.Enemy;
+import com.mygdx.game.Sprites.Items.Item;
+import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Sprites.TileObjects.InteractiveTileObject;
-
-import com.mygdx.game.MyGdxGame;
 
 public class WorldContactListener implements ContactListener {
     @Override
@@ -38,23 +39,30 @@ public class WorldContactListener implements ContactListener {
         }
         //
         switch (cDef) {
-            case MyGdxGame.PLAYER_BIT | MyGdxGame.ENEMY_BIT:
-                if (fixA.getFilterData().categoryBits == MyGdxGame.ENEMY_BIT)
+            case Constants.PLAYER_BIT | Constants.ENEMY_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.ENEMY_BIT)
                     ((Enemy) fixA.getUserData()).hitEnemy();
                 else {
                     ((Enemy) fixB.getUserData()).hitEnemy();
                 }
                 break;
-            case MyGdxGame.ENEMY_BIT | MyGdxGame.SPIKE_BIT:
-                if (fixA.getFilterData().categoryBits == MyGdxGame.ENEMY_BIT)
+            case Constants.ENEMY_BIT | Constants.SPIKE_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.ENEMY_BIT)
                     ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
                 else {
                     ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
                 }
                 break;
-            case MyGdxGame.ENEMY_BIT | MyGdxGame.ENEMY_BIT:
+            case Constants.ENEMY_BIT:
                 ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
                 ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
+                break;
+            case Constants.PLAYER_BIT | Constants.GOLD_COIN_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.GOLD_COIN_BIT)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
                 break;
 
         }

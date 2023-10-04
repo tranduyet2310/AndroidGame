@@ -7,8 +7,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.Utils;
 
 public class GoldCoin extends Item {
@@ -16,6 +17,7 @@ public class GoldCoin extends Item {
     private Array<TextureRegion> frames;
     private float stateTimer;
     private TextureRegion region;
+
     public GoldCoin(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         frames = new Array<TextureRegion>();
@@ -24,7 +26,7 @@ public class GoldCoin extends Item {
         }
         goldCoinAnimation = new Animation<TextureRegion>(0.4f, frames);
         stateTimer = 0;
-        velocity = new Vector2(0,0);
+        velocity = new Vector2(0, 0);
     }
 
     @Override
@@ -47,14 +49,17 @@ public class GoldCoin extends Item {
 
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(12 / MyGdxGame.PPM);
+        shape.setRadius(12 / Constants.PPM);
+        fixtureDef.filter.categoryBits = Constants.GOLD_COIN_BIT;
+        fixtureDef.filter.maskBits = Constants.PLAYER_BIT | Constants.GROUND_BIT
+                | Constants.SPIKE_BIT;
 
         fixtureDef.shape = shape;
         body.createFixture(fixtureDef).setUserData(this);
     }
 
     @Override
-    public void use() {
+    public void use(Player player) {
         destroy();
     }
 

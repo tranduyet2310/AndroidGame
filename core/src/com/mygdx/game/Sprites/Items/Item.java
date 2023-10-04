@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Sprites.Player;
 
 public abstract class Item extends Sprite {
     protected PlayScreen screen;
@@ -20,7 +21,7 @@ public abstract class Item extends Sprite {
         this.screen = screen;
         this.world = screen.getWorld();
         setPosition(x, y);
-        setBounds(getX(), getY(), 32 / MyGdxGame.PPM, 32 / MyGdxGame.PPM);
+        setBounds(getX(), getY(), 32 / Constants.PPM, 32 / Constants.PPM);
         defineItem();
         toDestroy = false;
         destroy = false;
@@ -28,7 +29,7 @@ public abstract class Item extends Sprite {
 
     public abstract void defineItem();
 
-    public abstract void use();
+    public abstract void use(Player player);
     public void update(float dt){
         if(toDestroy && !destroy){
             world.destroyBody(body);

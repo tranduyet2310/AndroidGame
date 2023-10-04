@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.StateManager;
 import com.mygdx.game.Tools.Utils;
@@ -30,12 +30,14 @@ public class Player extends Sprite {
     public boolean isAttacking = false;
     public boolean isAirAttack = false;
 
-    public Player(PlayScreen screen) {
+    public Player(PlayScreen screen, float x, float y) {
         this.world = screen.getWorld();
         currentState = State.STANDING;
         previousState = State.STANDING;
         stateTimer = 0;
         runningRight = true;
+
+        setPosition(x, y);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for (int i = 1; i <= 5; i++) {
@@ -81,7 +83,7 @@ public class Player extends Sprite {
         // define player character in Box2d
         definePlayer();
         playerStand = new TextureRegion(Utils.getRegion("player/Idle Sword/Idle Sword 01.png"));
-        setBounds(0, 0, 64 / MyGdxGame.PPM, 48 / MyGdxGame.PPM);
+        setBounds(0, 0, 64 / Constants.PPM, 48 / Constants.PPM);
         setRegion(playerStand);
     }
 
@@ -151,22 +153,23 @@ public class Player extends Sprite {
 
     public void definePlayer() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(330 / MyGdxGame.PPM, 320 / MyGdxGame.PPM);
+//        bodyDef.position.set(330 / Constants.PPM, 320 / Constants.PPM);
+        bodyDef.position.set(getX(), getY());
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         b2Body = world.createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(12 / MyGdxGame.PPM);
-        fixtureDef.filter.categoryBits = MyGdxGame.PLAYER_BIT;
-        fixtureDef.filter.maskBits = MyGdxGame.GROUND_BIT | MyGdxGame.GOLD_COIN_BIT | MyGdxGame.SILVER_COIN_BIT | MyGdxGame.ENEMY_BIT | MyGdxGame.SPIKE_BIT;
+        shape.setRadius(12 / Constants.PPM);
+        fixtureDef.filter.categoryBits = Constants.PLAYER_BIT;
+        fixtureDef.filter.maskBits = Constants.GROUND_BIT | Constants.GOLD_COIN_BIT | Constants.SILVER_COIN_BIT | Constants.ENEMY_BIT | Constants.SPIKE_BIT;
 
         fixtureDef.shape = shape;
         b2Body.createFixture(fixtureDef).setUserData("Player");
 
         FixtureDef swordDef = new FixtureDef();
         EdgeShape swordShape = new EdgeShape();
-        swordShape.set(new Vector2((5f) / MyGdxGame.PPM, b2Body.getLocalCenter().y / MyGdxGame.PPM), new Vector2((30f) / MyGdxGame.PPM, b2Body.getLocalCenter().y / MyGdxGame.PPM));
+        swordShape.set(new Vector2((5f) / Constants.PPM, b2Body.getLocalCenter().y / Constants.PPM), new Vector2((30f) / Constants.PPM, b2Body.getLocalCenter().y / Constants.PPM));
         swordDef.shape = swordShape;
         swordDef.isSensor = true;
         b2Body.createFixture(swordDef).setUserData("Sword");

@@ -1,5 +1,7 @@
 package com.mygdx.game.Sprites.TileObjects;
 
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -11,7 +13,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 
 public abstract class InteractiveTileObject {
@@ -25,11 +27,13 @@ public abstract class InteractiveTileObject {
     protected BodyDef bodyDef;
     protected PolygonShape shape;
     protected PlayScreen screen;
+    protected MapObject object;
 
-    public InteractiveTileObject(PlayScreen screen, Rectangle bounds) {
+    public InteractiveTileObject(PlayScreen screen, MapObject object) {
         this.world = screen.getWorld();
         this.map = screen.getMap();
-        this.bounds = bounds;
+        this.object = object;
+        this.bounds = ((RectangleMapObject) object).getRectangle();
         this.screen = screen;
 
         bodyDef = new BodyDef();
@@ -37,9 +41,9 @@ public abstract class InteractiveTileObject {
         shape = new PolygonShape();
 
         bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set((bounds.getX() + bounds.getWidth() / 2) / MyGdxGame.PPM, (bounds.getY() + bounds.getHeight() / 2) / MyGdxGame.PPM);
+        bodyDef.position.set((bounds.getX() + bounds.getWidth() / 2) / Constants.PPM, (bounds.getY() + bounds.getHeight() / 2) / Constants.PPM);
         body = world.createBody(bodyDef);
-        shape.setAsBox(bounds.getWidth() / 2 / MyGdxGame.PPM, bounds.getHeight() / 2 / MyGdxGame.PPM);
+        shape.setAsBox(bounds.getWidth() / 2 / Constants.PPM, bounds.getHeight() / 2 / Constants.PPM);
         fixtureDef.shape = shape;
         fixture = body.createFixture(fixtureDef);
 
@@ -57,7 +61,7 @@ public abstract class InteractiveTileObject {
 
     public TiledMapTileLayer.Cell getCell() {
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
-        return layer.getCell((int) (body.getPosition().x * MyGdxGame.PPM / 32), (int) (body.getPosition().y * MyGdxGame.PPM / 32));
+        return layer.getCell((int) (body.getPosition().x * Constants.PPM / 32), (int) (body.getPosition().y * Constants.PPM / 32));
     }
 }
 
