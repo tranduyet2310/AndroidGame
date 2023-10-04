@@ -26,6 +26,7 @@ public class Player extends Sprite {
     private TextureRegion playerStand;
     private Animation<TextureRegion> playerRun, playerJump, playerIdle, playerFalling, playerAttacking, playerAirAttack, playerHit, playerDead;
     private float stateTimer;
+    private int maxHealth, currentHealth, powerAttack;
     private boolean runningRight;
     public boolean isAttacking = false;
     public boolean isAirAttack = false;
@@ -85,6 +86,11 @@ public class Player extends Sprite {
         playerStand = new TextureRegion(Utils.getRegion("player/Idle Sword/Idle Sword 01.png"));
         setBounds(0, 0, 64 / Constants.PPM, 48 / Constants.PPM);
         setRegion(playerStand);
+
+        //
+        maxHealth = Constants.PLAYER_MAXHEALTH;
+        currentHealth = maxHealth;
+        powerAttack = Constants.PLAYER_ATTACK;
     }
 
     public void update(float dt) {
@@ -146,7 +152,7 @@ public class Player extends Sprite {
             return State.RUNNING;
         else if (isAttacking) {
             return State.ATTACKING;
-        } else if (StateManager.playerOnWater) {
+        } else if (StateManager.playerOnWater || currentHealth < 0) {
             return State.DEAD;
         } else return State.STANDING;
     }
@@ -165,7 +171,7 @@ public class Player extends Sprite {
         fixtureDef.filter.maskBits = Constants.GROUND_BIT | Constants.GOLD_COIN_BIT | Constants.SILVER_COIN_BIT | Constants.ENEMY_BIT | Constants.SPIKE_BIT;
 
         fixtureDef.shape = shape;
-        b2Body.createFixture(fixtureDef).setUserData("Player");
+        b2Body.createFixture(fixtureDef).setUserData(this);
 
         FixtureDef swordDef = new FixtureDef();
         EdgeShape swordShape = new EdgeShape();
@@ -180,5 +186,12 @@ public class Player extends Sprite {
         //fixtureDef.isSensor = true;
         //b2Body.createFixture(fixtureDef);
         //b2Body.setUserData("Player");
+    }
+    public void getsHurt(int damage){
+        currentHealth -= damage;
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
     }
 }

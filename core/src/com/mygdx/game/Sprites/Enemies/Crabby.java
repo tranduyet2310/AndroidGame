@@ -23,9 +23,11 @@ public class Crabby extends Enemy {
     public EnemyState currentState;
     public EnemyState previousState;
     private float stateTimer;
+    private int maxHealth, currentHealth, powerAttack;
     private boolean runningRight;
     private Animation<TextureRegion> enemyIdle, enemyAttacking, enemyHit, enemyDead, enemyRunning;
     private boolean isDead = false;
+    private boolean isHurting = false;
     //
     private boolean setToDestroy;
     private boolean destroyed;
@@ -68,6 +70,10 @@ public class Crabby extends Enemy {
         }
         enemyAttacking = new Animation<TextureRegion>(0.4f, frames);
         frames.clear();
+        //
+        maxHealth = Constants.CRABBY_MAXHEALTH;
+        currentHealth = maxHealth;
+        powerAttack = Constants.CRABBY_ATTACK;
     }
 
     public void update(float dt) {
@@ -94,6 +100,8 @@ public class Crabby extends Enemy {
             return EnemyState.RUNNING;
         else if (isDead) {
             return EnemyState.DEAD;
+        }else if (isHurting) {
+            return EnemyState.HIT;
         } else return EnemyState.IDLE;
     }
 
@@ -157,9 +165,15 @@ public class Crabby extends Enemy {
     }
 
     @Override
-    public void hitEnemy() {
-        isDead = true;
-        setToDestroy = true;
-        Gdx.app.log("Crabby: ", "DEAD");
+    public void getsHurt() {
+        currentHealth -= Constants.PLAYER_ATTACK;
+        if(currentHealth <= 0){
+            isDead = true;
+            setToDestroy = true;
+            Gdx.app.log("Crabby: ", "DEAD");
+        } else if (currentHealth < maxHealth){
+            isHurting = true;
+        }
+
     }
 }

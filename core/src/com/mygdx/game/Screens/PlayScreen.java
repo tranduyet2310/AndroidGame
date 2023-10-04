@@ -21,6 +21,7 @@ import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Scences.Hud;
+import com.mygdx.game.Scences.LifeBar;
 import com.mygdx.game.Scences.StatusBar;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.GoldCoin;
@@ -32,13 +33,10 @@ import com.mygdx.game.Tools.B2WorldCreator;
 import com.mygdx.game.Tools.Utils;
 import com.mygdx.game.Tools.WorldContactListener;
 
-import java.util.PriorityQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class PlayScreen implements Screen {
-
     private MyGdxGame game;
-    //    private TextureAtlas atlas;
     private OrthographicCamera gameCam;
     private Viewport gamePort;
     private Hud hud;
@@ -54,6 +52,7 @@ public class PlayScreen implements Screen {
     //    Character
     private Player player;
     private boolean hasJupmed = false;
+    private LifeBar lifeBar;
     //    Calculate map
     private TiledMapTileLayer mapTileLayer;
     private float evalHeight, evalWidth, totalMapWidth;
@@ -121,7 +120,8 @@ public class PlayScreen implements Screen {
 //        gameCam.zoom = MathUtils.clamp(gameCam.zoom, minZoom, maxZoom);
         items = new Array<Item>();
         itemsToSpawn = new LinkedBlockingDeque<ItemDef>();
-
+        //
+        lifeBar = new LifeBar(game.batch, player);
     }
 
     public void spwanItem(ItemDef idef) {
@@ -131,7 +131,7 @@ public class PlayScreen implements Screen {
     public void handleSpwaningItems() {
         if (!itemsToSpawn.isEmpty()) {
             ItemDef idef = itemsToSpawn.poll();
-            if(idef.type == GoldCoin.class){
+            if (idef.type == GoldCoin.class) {
                 items.add(new GoldCoin(this, idef.position.x, idef.position.y));
             } else if (idef.type == SilverCoin.class) {
                 items.add(new SilverCoin(this, idef.position.x, idef.position.y));
@@ -194,12 +194,13 @@ public class PlayScreen implements Screen {
                 enemy.b2body.setActive(true);
         }
 
-        for (Item item : items){
+        for (Item item : items) {
             item.update(dt);
         }
 
         hud.update(dt);
         statusBar.update(dt);
+        lifeBar.update(dt);
 
         // attach our gamecam to our player.x and player.y coordinate
 //        gameCam.position.x = player.b2Body.getPosition().x;
@@ -220,10 +221,6 @@ public class PlayScreen implements Screen {
         if (MyGdxGame.IS_MUSIC_ENABLED)
             music.play();
     }
-
-//    public TextureAtlas getAtlas() {
-//        return atlas;
-//    }
 
     @Override
     public void render(float delta) {
@@ -249,7 +246,7 @@ public class PlayScreen implements Screen {
             enemy.draw(game.batch);
         }
 
-        for (Item item : items){
+        for (Item item : items) {
             item.draw(game.batch);
         }
 
@@ -260,6 +257,8 @@ public class PlayScreen implements Screen {
         hud.stage.draw();
         statusBar.stage.act();
         statusBar.stage.draw();
+        lifeBar.stage.act();;
+        lifeBar.stage.draw();
     }
 
     @Override
@@ -299,6 +298,8 @@ public class PlayScreen implements Screen {
         b2dr.dispose();
         hud.dispose();
         music.stop();
+        statusBar.dispose();
+        lifeBar.dispose();
 //        music.dispose();
 //        sound.dispose();
     }

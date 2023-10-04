@@ -10,6 +10,7 @@ import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Sprites.TileObjects.InteractiveTileObject;
+import com.mygdx.game.Sprites.TileObjects.Water;
 
 public class WorldContactListener implements ContactListener {
     @Override
@@ -41,9 +42,9 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             case Constants.PLAYER_BIT | Constants.ENEMY_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.ENEMY_BIT)
-                    ((Enemy) fixA.getUserData()).hitEnemy();
+                    ((Enemy) fixA.getUserData()).getsHurt();
                 else {
-                    ((Enemy) fixB.getUserData()).hitEnemy();
+                    ((Enemy) fixB.getUserData()).getsHurt();
                 }
                 break;
             case Constants.ENEMY_BIT | Constants.SPIKE_BIT:
@@ -62,6 +63,22 @@ public class WorldContactListener implements ContactListener {
                     ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
                 else {
                     ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.SPIKE_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT)
+                    ((Player) fixA.getUserData()).getsHurt(50);
+                else {
+                    ((Player) fixB.getUserData()).getsHurt(50);
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.WATER_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
+                    ((Player) fixA.getUserData()).getsHurt(Constants.PLAYER_MAXHEALTH);
+                    ((Water) fixB.getUserData()).onHeadHit();
+                } else {
+                    ((Player) fixB.getUserData()).getsHurt(Constants.PLAYER_MAXHEALTH);
+                    ((Water) fixA.getUserData()).onHeadHit();
                 }
                 break;
 

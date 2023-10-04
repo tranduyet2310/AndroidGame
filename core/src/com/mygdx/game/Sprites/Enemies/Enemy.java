@@ -22,7 +22,7 @@ public abstract class Enemy extends Sprite {
     }
 
     protected abstract void defineEnemy();
-    public abstract void hitEnemy();
+    public abstract void getsHurt();
     public abstract void update(float dt);
     public void reverseVelocity(boolean x, boolean y){
         if(x)
