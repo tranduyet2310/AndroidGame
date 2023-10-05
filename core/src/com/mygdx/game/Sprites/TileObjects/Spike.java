@@ -13,6 +13,8 @@ public class Spike extends InteractiveTileObject{
         fixture.setUserData(this);
     }
 
+
+
     @Override
     public void onHeadHit() {
         Gdx.app.log("Spike", "Collision");
@@ -22,4 +24,5 @@ public class Spike extends InteractiveTileObject{
     public void onSwordHit() {
         Gdx.app.log("Spike", "Sword Collision");
     }
+
 }

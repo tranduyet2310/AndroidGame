@@ -10,18 +10,19 @@ import com.mygdx.game.StateManager;
 public class Water extends InteractiveTileObject{
     public Water(PlayScreen screen, MapObject object) {
         super(screen, object);
-//        setCategoryFilter(Constants.WATER_BIT);
+        setCategoryFilter(Constants.WATER_BIT);
         fixture.setUserData(this);
     }
 
     @Override
     public void onHeadHit() {
         Gdx.app.log("Water", "Collision");
-        StateManager.playerOnWater = true;
+//        StateManager.playerOnWater = true;
     }
 
     @Override
     public void onSwordHit() {
         Gdx.app.log("Water", "Sword Collision");
     }
+
 }

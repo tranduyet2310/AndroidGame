@@ -3,6 +3,7 @@ package com.mygdx.game.Tools;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.Sprites.Enemies.Crabby;
 
 public class Utils {
     public static final String MUSIC_LEVEL1 = "audio/level1.wav";
@@ -16,7 +17,8 @@ public class Utils {
     public static final String SOUND_JUMP = "audio/jump.wav";
     public static final String SOUND_LVLCOMPLETED = "audio/lvlcompleted.wav";
 
-    static public TextureRegion getRegion(String path){
+    static public TextureRegion getRegion(String path) {
         return new TextureRegion(new Texture(Gdx.files.internal(path)));
     }
+
 }

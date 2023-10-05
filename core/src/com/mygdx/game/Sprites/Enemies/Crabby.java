@@ -4,43 +4,43 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.Utils;
 
 public class Crabby extends Enemy {
-    private float stateTime;
     private Array<TextureRegion> frames;
-
     //
-    public enum EnemyState {IDLE, ATTACKING, HIT, DEAD, RUNNING}
+    public enum CrabbyState {IDLE, ATTACKING, HIT, DEAD, RUNNING}
 
-    ;
-    public EnemyState currentState;
-    public EnemyState previousState;
+    public CrabbyState currentState;
+    public CrabbyState previousState;
     private float stateTimer;
-    private int maxHealth, currentHealth, powerAttack;
+    public int maxHealth, currentHealth, powerAttack;
     private boolean runningRight;
     private Animation<TextureRegion> enemyIdle, enemyAttacking, enemyHit, enemyDead, enemyRunning;
     private boolean isDead = false;
     private boolean isHurting = false;
+    private boolean isAttacking = false;
     //
     private boolean setToDestroy;
     private boolean destroyed;
 
     public Crabby(PlayScreen screen, float x, float y) {
         super(screen, x, y);
-        stateTime = 0;
         setBounds(getX(), getY(), 72 / Constants.PPM, 32 / Constants.PPM);
         setToDestroy = false;
         destroyed = false;
         //
-        currentState = EnemyState.IDLE;
-        previousState = EnemyState.IDLE;
+        currentState = CrabbyState.IDLE;
+        previousState = CrabbyState.IDLE;
         stateTimer = 0;
         runningRight = true;
         //
@@ -77,15 +77,12 @@ public class Crabby extends Enemy {
     }
 
     public void update(float dt) {
-        stateTime += dt;
-
         if (setToDestroy && !destroyed) {
             world.destroyBody(b2body);
             destroyed = true;
-            isDead = true;
+            isDead = false;
             stateTimer = 0;
-            stateTime = 0;
-        } else isDead = false;
+        }
         //
 
         //
@@ -95,14 +92,16 @@ public class Crabby extends Enemy {
         setRegion(getFrame(dt));
     }
 
-    public EnemyState getState() {
-        if (b2body.getLinearVelocity().x != 0)
-            return EnemyState.RUNNING;
-        else if (isDead) {
-            return EnemyState.DEAD;
-        }else if (isHurting) {
-            return EnemyState.HIT;
-        } else return EnemyState.IDLE;
+    public CrabbyState getState() {
+        if (isDead) {
+            return CrabbyState.DEAD;
+        } else if (isHurting) {
+            return CrabbyState.HIT;
+        } else if (isAttacking) {
+            return CrabbyState.ATTACKING;
+        } else if (b2body.getLinearVelocity().x >= 0.5f) {
+            return CrabbyState.RUNNING;
+        } else return CrabbyState.IDLE;
     }
 
     public TextureRegion getFrame(float dt) {
@@ -110,16 +109,29 @@ public class Crabby extends Enemy {
         TextureRegion region;
         switch (currentState) {
             case ATTACKING:
-                region = enemyAttacking.getKeyFrame(stateTimer);
+                region = enemyAttacking.getKeyFrame(stateTimer, true);
+                if (enemyAttacking.isAnimationFinished(stateTimer)) {
+                    isAttacking = false;
+                    velocity.x = 0.2f;
+                }
                 break;
             case RUNNING:
                 region = enemyRunning.getKeyFrame(stateTimer, true);
                 break;
             case HIT:
                 region = enemyHit.getKeyFrame(stateTimer);
+                if (enemyHit.isAnimationFinished(stateTimer)) {
+                    isHurting = false;
+                    isAttacking = true;
+                    velocity.x = 0.2f;
+                }
                 break;
             case DEAD:
                 region = enemyDead.getKeyFrame(stateTimer);
+                if (enemyDead.isAnimationFinished(stateTimer)) {
+                    setToDestroy = true;
+                    Gdx.app.log("Crabby: ", "in enemyDead");
+                }
                 break;
             case IDLE:
             default:
@@ -141,7 +153,6 @@ public class Crabby extends Enemy {
     @Override
     protected void defineEnemy() {
         BodyDef bodyDef = new BodyDef();
-//        bodyDef.position.set(330 / MyGdxGame.PPM, 320 / MyGdxGame.PPM);
         bodyDef.position.set(getX(), getY());
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bodyDef);
@@ -167,13 +178,21 @@ public class Crabby extends Enemy {
     @Override
     public void getsHurt() {
         currentHealth -= Constants.PLAYER_ATTACK;
-        if(currentHealth <= 0){
+        if (currentHealth <= 0) {
             isDead = true;
-            setToDestroy = true;
-            Gdx.app.log("Crabby: ", "DEAD");
-        } else if (currentHealth < maxHealth){
+        } else if (currentHealth < maxHealth) {
             isHurting = true;
         }
+    }
 
+    public void canSeePlayer(Player player) {
+        Vector2 playerPosition = new Vector2(player.getX(), player.getY());
+        Vector2 enemyPosition = new Vector2(getX(), getY());
+        float distance = Math.abs(player.getX() - getX());
+        float attackRange = 32;
+        if (distance - attackRange <= 0) {
+            isAttacking = true;
+        }
+        Gdx.app.log("canSeePlayer", "distance:" + distance);
     }
 }

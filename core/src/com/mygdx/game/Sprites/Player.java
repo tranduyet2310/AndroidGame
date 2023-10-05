@@ -1,6 +1,7 @@
 package com.mygdx.game.Sprites;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -13,14 +14,17 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Sprites.Sword.SwordAttack;
 import com.mygdx.game.StateManager;
 import com.mygdx.game.Tools.Utils;
 
 public class Player extends Sprite {
     public enum State {FALLING, JUMPING, STANDING, RUNNING, ATTACKING, AIRATTACK, DEAD, HIT}
-    ;
+
     public State currentState;
     public State previousState;
+    //
+    public PlayScreen screen;
     public World world;
     public Body b2Body;
     private TextureRegion playerStand;
@@ -30,8 +34,12 @@ public class Player extends Sprite {
     private boolean runningRight;
     public boolean isAttacking = false;
     public boolean isAirAttack = false;
+    public boolean takeDamage;
+    public boolean isDead;
+    private Array<SwordAttack> swordAttacks;
 
     public Player(PlayScreen screen, float x, float y) {
+        this.screen = screen;
         this.world = screen.getWorld();
         currentState = State.STANDING;
         previousState = State.STANDING;
@@ -91,11 +99,19 @@ public class Player extends Sprite {
         maxHealth = Constants.PLAYER_MAXHEALTH;
         currentHealth = maxHealth;
         powerAttack = Constants.PLAYER_ATTACK;
+        //
+        swordAttacks = new Array<SwordAttack>();
     }
 
     public void update(float dt) {
         setPosition(b2Body.getPosition().x - getWidth() / 2, b2Body.getPosition().y - getHeight() / 2);
         setRegion(getFrame(dt));
+
+        for (SwordAttack swordAttack : swordAttacks) {
+            swordAttack.update(dt);
+            if (swordAttack.isDestroyed())
+                swordAttacks.removeValue(swordAttack, true);
+        }
     }
 
     public TextureRegion getFrame(float dt) {
@@ -119,6 +135,8 @@ public class Player extends Sprite {
                 break;
             case HIT:
                 region = playerHit.getKeyFrame(stateTimer);
+                if (playerHit.isAnimationFinished(stateTimer))
+                    takeDamage = false;
                 break;
             case DEAD:
                 region = playerDead.getKeyFrame(stateTimer);
@@ -152,14 +170,15 @@ public class Player extends Sprite {
             return State.RUNNING;
         else if (isAttacking) {
             return State.ATTACKING;
-        } else if (StateManager.playerOnWater || currentHealth < 0) {
+        } else if (StateManager.playerOnWater || currentHealth <= 0) {
             return State.DEAD;
+        } else if (takeDamage) {
+            return State.HIT;
         } else return State.STANDING;
     }
 
     public void definePlayer() {
         BodyDef bodyDef = new BodyDef();
-//        bodyDef.position.set(330 / Constants.PPM, 320 / Constants.PPM);
         bodyDef.position.set(getX(), getY());
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         b2Body = world.createBody(bodyDef);
@@ -168,7 +187,10 @@ public class Player extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(12 / Constants.PPM);
         fixtureDef.filter.categoryBits = Constants.PLAYER_BIT;
-        fixtureDef.filter.maskBits = Constants.GROUND_BIT | Constants.GOLD_COIN_BIT | Constants.SILVER_COIN_BIT | Constants.ENEMY_BIT | Constants.SPIKE_BIT;
+        fixtureDef.filter.maskBits = Constants.GROUND_BIT |
+                Constants.GOLD_COIN_BIT | Constants.SILVER_COIN_BIT | Constants.ENEMY_BIT |
+                Constants.SPIKE_BIT | Constants.WATER_BIT | Constants.SPECIAL_ITEM_BIT | Constants.BLUE_DIAMOND |
+                Constants.GOLDEN_SKULL;
 
         fixtureDef.shape = shape;
         b2Body.createFixture(fixtureDef).setUserData(this);
@@ -176,9 +198,11 @@ public class Player extends Sprite {
         FixtureDef swordDef = new FixtureDef();
         EdgeShape swordShape = new EdgeShape();
         swordShape.set(new Vector2((5f) / Constants.PPM, b2Body.getLocalCenter().y / Constants.PPM), new Vector2((30f) / Constants.PPM, b2Body.getLocalCenter().y / Constants.PPM));
+        swordDef.filter.categoryBits = Constants.SWORD_BIT;
+        swordDef.filter.maskBits = Constants.ENEMY_BIT;
         swordDef.shape = swordShape;
         swordDef.isSensor = true;
-        b2Body.createFixture(swordDef).setUserData("Sword");
+        b2Body.createFixture(swordDef).setUserData(this);
 
 //        EdgeShape head = new EdgeShape();
 //        head.set(new Vector2(-2 / MyGdxGame.PPM, 10/ MyGdxGame.PPM), new Vector2(2 / MyGdxGame.PPM, 10/ MyGdxGame.PPM));
@@ -187,11 +211,32 @@ public class Player extends Sprite {
         //b2Body.createFixture(fixtureDef);
         //b2Body.setUserData("Player");
     }
-    public void getsHurt(int damage){
+
+    public void getsHurt(int damage) {
+        takeDamage = true;
         currentHealth -= damage;
     }
 
     public int getCurrentHealth() {
         return currentHealth;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public float getStateTimer() {
+        return stateTimer;
+    }
+
+    public void attack() {
+        swordAttacks.add(new SwordAttack(screen, b2Body.getPosition().x, b2Body.getPosition().y, runningRight ? true : false));
+    }
+
+    public void draw(Batch batch) {
+        super.draw(batch);
+        for (SwordAttack attack : swordAttacks) {
+            attack.draw(batch);
+        }
     }
 }

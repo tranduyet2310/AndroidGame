@@ -52,6 +52,7 @@ public class PlayScreen implements Screen {
     //    Character
     private Player player;
     private boolean hasJupmed = false;
+    private boolean playSoundOnceTime = false;
     private LifeBar lifeBar;
     //    Calculate map
     private TiledMapTileLayer mapTileLayer;
@@ -141,6 +142,7 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float dt) {
+        // jump
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && !hasJupmed) {
             player.b2Body.applyLinearImpulse(new Vector2(0, 4f), player.b2Body.getWorldCenter(), true);
             hasJupmed = true;
@@ -149,34 +151,47 @@ public class PlayScreen implements Screen {
             sound.setPitch(idSound, 1);
             sound.setLooping(idSound, false);
         }
-
+        // jump + attack
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             player.isAirAttack = true;
             sound = audioManager.getSound(Utils.SOUND_ATTACK2);
             long idSound = sound.play(0.5f);
             sound.setLooping(idSound, false);
         } else player.isAirAttack = false;
-
+        // no cumulative force
         if (player.b2Body.getLinearVelocity().y >= 4)
             player.b2Body.getLinearVelocity().y = 0;
-
+        // fall to ground
         if (player.b2Body.getLinearVelocity().y == 0) {
             hasJupmed = false;
         }
-
+        // moveright
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2Body.getLinearVelocity().x <= 2) {
             player.b2Body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2Body.getWorldCenter(), true);
         }
+        // move left
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2Body.getLinearVelocity().x >= -2) {
             player.b2Body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2Body.getWorldCenter(), true);
         }
+        // Attack
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             player.isAttacking = true;
             sound = audioManager.getSound(Utils.SOUND_ATTACK1);
-            long idSound = sound.play(0.5f);
+            long idSound = sound.play(0.2f);
             sound.setLooping(idSound, false);
         } else player.isAttacking = false;
-
+        // player dead
+        if (player.getState() == Player.State.DEAD) {
+            if (!playSoundOnceTime) {
+                sound = audioManager.getSound(Utils.SOUND_DIE);
+                long idSound = sound.play(0.5f);
+                sound.setLooping(idSound, false);
+                playSoundOnceTime = true;
+            }
+        }
+        //
+        if (Gdx.input.isKeyPressed(Input.Keys.B))
+            player.attack();
     }
 
     public void update(float dt) {
@@ -188,7 +203,7 @@ public class PlayScreen implements Screen {
 
         player.update(dt);
 
-        for (Enemy enemy : creator.getCrabbies()) {
+        for (Enemy enemy : creator.getEnemies()) {
             enemy.update(dt);
             if (enemy.getX() < player.getX() + 320 / Constants.PPM)
                 enemy.b2body.setActive(true);
@@ -197,6 +212,7 @@ public class PlayScreen implements Screen {
         for (Item item : items) {
             item.update(dt);
         }
+
 
         hud.update(dt);
         statusBar.update(dt);
@@ -242,7 +258,7 @@ public class PlayScreen implements Screen {
         game.batch.begin();
         player.draw(game.batch);
 
-        for (Enemy enemy : creator.getCrabbies()) {
+        for (Enemy enemy : creator.getEnemies()) {
             enemy.draw(game.batch);
         }
 
@@ -257,8 +273,17 @@ public class PlayScreen implements Screen {
         hud.stage.draw();
         statusBar.stage.act();
         statusBar.stage.draw();
-        lifeBar.stage.act();;
+        lifeBar.stage.act();
         lifeBar.stage.draw();
+        //
+        if (gameOver()) {
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
+    }
+
+    public boolean gameOver() {
+        return player.currentState == Player.State.DEAD && player.getStateTimer() > 3;
     }
 
     @Override

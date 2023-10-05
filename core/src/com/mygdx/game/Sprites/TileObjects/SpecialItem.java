@@ -14,6 +14,7 @@ public class SpecialItem extends InteractiveTileObject {
     public SpecialItem(PlayScreen screen, MapObject object) {
         super(screen, object);
         fixture.setUserData(this);
+        setCategoryFilter(Constants.SPECIAL_ITEM_BIT);
     }
 
     @Override

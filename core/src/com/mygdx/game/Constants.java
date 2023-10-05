@@ -17,6 +17,14 @@ public class Constants {
     public static final short BLUE_DIAMOND = 256;
     public static final short BIG_MAP = 512;
     public static final short WATER_BIT = 1024;
+    public static final short SPECIAL_ITEM_BIT = 2048;
+    public static final short SMALL_MAP_1 = 100;
+    public static final short SMALL_MAP_2 = 200;
+    public static final short SMALL_MAP_3 = 300;
+    public static final short SMALL_MAP_4 = 400;
+    public static final short SWORD_BIT = 500;
+    public static final short SWORD_ATTACK_BIT = 600;
+
     // flag to change screen
     public static final int MAP = 0;
     public static final int PLAY = 1;

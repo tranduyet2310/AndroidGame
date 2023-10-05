@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Crabby;
+import com.mygdx.game.Sprites.Enemies.Enemy;
+import com.mygdx.game.Sprites.Enemies.Shark;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Sprites.TileObjects.MerchantShip;
 import com.mygdx.game.Sprites.TileObjects.SpecialItem;
@@ -21,6 +23,7 @@ import com.mygdx.game.Sprites.TileObjects.Water;
 
 public class B2WorldCreator {
     private Array<Crabby> crabbies;
+    private Array<Shark> sharks;
     private Player player;
 
     public B2WorldCreator(PlayScreen screen) {
@@ -81,10 +84,27 @@ public class B2WorldCreator {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             player = new Player(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM);
         }
+        // Create Shark boides fixture
+        sharks = new Array<Shark>();
+        for (MapObject object : map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            sharks.add(new Shark(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+        }
     }
 
     public Array<Crabby> getCrabbies() {
         return crabbies;
+    }
+
+    public Array<Shark> getSharks() {
+        return sharks;
+    }
+
+    public Array<Enemy> getEnemies(){
+        Array<Enemy> enemies = new Array<Enemy>();
+        enemies.addAll(sharks);
+        enemies.addAll(crabbies);
+        return enemies;
     }
 
     public Player getPlayer() {
