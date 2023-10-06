@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.StateManager;
+import com.mygdx.game.Tools.Utils;
 
 public class Water extends InteractiveTileObject{
     public Water(PlayScreen screen, MapObject object) {
@@ -17,7 +18,7 @@ public class Water extends InteractiveTileObject{
     @Override
     public void onHeadHit() {
         Gdx.app.log("Water", "Collision");
-//        StateManager.playerOnWater = true;
+        Utils.setPlayerOnWater(true);
     }
 
     @Override

@@ -32,7 +32,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.Tools.Utils;
 
 public class MapScreen implements Screen, InputProcessor {
     private MyGdxGame game;
@@ -128,7 +127,7 @@ public class MapScreen implements Screen, InputProcessor {
         stage = new Stage();
 
         audioManager = AudioManager.getInstance();
-        music = audioManager.getMusic(Utils.MUSIC_LEVEL1);
+        music = audioManager.getMusic(Constants.MUSIC_LEVEL1);
         music.setLooping(true);
         music.setVolume(MyGdxGame.MUSIC_VOLUME);
     }

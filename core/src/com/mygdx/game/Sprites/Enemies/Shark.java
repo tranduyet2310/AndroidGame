@@ -10,10 +10,12 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Sprites.Sword.SwordAttack;
 import com.mygdx.game.Tools.Utils;
 
 public class Shark extends Enemy {
     public enum SharkState {RUNNING, IDLE, HIT, DEAD, ATTACK, JUMP}
+
     public SharkState currentState;
     public SharkState previousState;
     private float stateTimer;
@@ -28,44 +30,20 @@ public class Shark extends Enemy {
     public Shark(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         stateTimer = 0;
-        setToDestroy = false;
-        destroyed = false;
         currentHealth = maxHealth = Constants.SHARK_MAXHEALTH;
         powerAttack = Constants.SHARK_ATTACK;
         currentState = previousState = SharkState.IDLE;
+        isJumping = false;
+        isAttacking = false;
+        isDead = false;
+        isHurting = false;
+        setToDestroy = false;
+        destroyed = false;
+
         setBounds(getX(), getY(), 34 / Constants.PPM, 32 / Constants.PPM);
 
         frames = new Array<TextureRegion>();
-        for (int i = 1; i <= 8; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Idle/Idle 0" + i + ".png")));
-        }
-        sharkIdle = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 8; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Attack/Attack 0" + i + ".png")));
-        }
-        sharkAttack = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 8; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Dead Hit/Dead Hit 0" + i + ".png")));
-        }
-        sharkDead = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 4; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Hit/Hit 0" + i + ".png")));
-        }
-        sharkHit = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 6; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Run/Run 0" + i + ".png")));
-        }
-        sharkRunning = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 3; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Jump/Jump 0" + i + ".png")));
-        }
-        sharkJump = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
+        initAnimation(frames);
     }
 
     @Override
@@ -80,7 +58,7 @@ public class Shark extends Enemy {
         shape.setRadius(12 / Constants.PPM);
         fixtureDef.filter.categoryBits = Constants.ENEMY_BIT;
         fixtureDef.filter.maskBits = Constants.GROUND_BIT | Constants.WATER_BIT | Constants.SWORD_BIT
-                | Constants.SPIKE_BIT | Constants.ENEMY_BIT | Constants.PLAYER_BIT;
+                | Constants.SPIKE_BIT | Constants.ENEMY_BIT | Constants.PLAYER_BIT | Constants.SWORD_ATTACK_BIT;
 
         fixtureDef.shape = shape;
         b2body.createFixture(fixtureDef).setUserData(this);
@@ -88,12 +66,25 @@ public class Shark extends Enemy {
 
     @Override
     public void getsHurt() {
-        currentHealth -= Constants.PLAYER_ATTACK;
         if (currentHealth <= 0) {
             isDead = true;
-//            setToDestroy = true;
+            currentHealth = 0;
             Gdx.app.log("Shark", "DEAD");
-        } else if (currentHealth < maxHealth) {
+        } else {
+            currentHealth -= Constants.PLAYER_ATTACK;
+            isHurting = true;
+        }
+    }
+
+    @Override
+    public void getSworkAttack() {
+//        attack.setToDestroy();
+        if (currentHealth <= 0) {
+            isDead = true;
+            currentHealth = 0;
+            Gdx.app.log("Shark", "DEAD");
+        } else {
+            currentHealth -= 15;
             isHurting = true;
         }
     }
@@ -108,10 +99,6 @@ public class Shark extends Enemy {
             stateTimer = 0;
         }
 
-//        if (currentState == SharkState.RUNNING && stateTimer > 2) {
-//            currentState = SharkState.JUMP;
-//            velocity.y = 0.5f;
-//        }
         b2body.setLinearVelocity(velocity);
         setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
         setRegion(getFrame(dt));
@@ -179,6 +166,9 @@ public class Shark extends Enemy {
             case IDLE:
             default:
                 region = sharkIdle.getKeyFrame(stateTimer);
+                if (sharkIdle.isAnimationFinished(stateTimer)) {
+                    velocity.x = 0.5f;
+                }
                 break;
         }
         if (velocity.x > 0 && !region.isFlipX()) {
@@ -190,5 +180,42 @@ public class Shark extends Enemy {
         stateTimer = currentState == previousState ? stateTimer + dt : 0;
         previousState = currentState;
         return region;
+    }
+
+    public void initAnimation(Array<TextureRegion> frames) {
+        for (int i = 1; i <= 8; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Idle/Idle 0" + i + ".png")));
+        }
+        sharkIdle = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 8; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Attack/Attack 0" + i + ".png")));
+        }
+        sharkAttack = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 8; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Dead Hit/Dead Hit 0" + i + ".png")));
+        }
+        sharkDead = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 4; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Hit/Hit 0" + i + ".png")));
+        }
+        sharkHit = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 6; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Run/Run 0" + i + ".png")));
+        }
+        sharkRunning = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 3; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Shark/Jump/Jump 0" + i + ".png")));
+        }
+        sharkJump = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 }

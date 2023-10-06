@@ -10,20 +10,20 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.Tools.Utils;
 
 public class MenuScreen implements Screen {
     private MyGdxGame game;
+    private Viewport viewport;
     public Stage stage;
     private Texture bg_menu;
     private Sprite sprite;
@@ -33,15 +33,16 @@ public class MenuScreen implements Screen {
 
     public MenuScreen(MyGdxGame game) {
         this.game = game;
+        viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT, new OrthographicCamera());
+        stage = new Stage(viewport, game.batch);
 
-        stage = new Stage(new FitViewport(Constants.V_WIDTH , Constants.V_HEIGHT, new OrthographicCamera()));
         bg_menu = new Texture(Gdx.files.internal("resource/bg_menu.png"));
         sprite = new Sprite(bg_menu);
         sprite.setPosition(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM);
         batch = new SpriteBatch();
 
         audioManager = AudioManager.getInstance();
-        music = audioManager.getMusic(Utils.MUSIC_MENU);
+        music = audioManager.getMusic(Constants.MUSIC_MENU);
         music.setLooping(true);
         music.setVolume(MyGdxGame.MUSIC_VOLUME);
     }
@@ -118,7 +119,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+       viewport.update(width, height, true);
     }
 
     @Override

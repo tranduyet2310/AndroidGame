@@ -5,8 +5,8 @@ import com.badlogic.gdx.maps.MapObject;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 
-public class MerchantShip extends InteractiveTileObject{
-    public MerchantShip(PlayScreen screen, MapObject object){
+public class MerchantShip extends InteractiveTileObject {
+    public MerchantShip(PlayScreen screen, MapObject object) {
         super(screen, object);
         fixture.setUserData(this);
     }

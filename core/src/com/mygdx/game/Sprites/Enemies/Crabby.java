@@ -13,11 +13,12 @@ import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Player;
+import com.mygdx.game.Sprites.Sword.SwordAttack;
 import com.mygdx.game.Tools.Utils;
 
 public class Crabby extends Enemy {
     private Array<TextureRegion> frames;
-    //
+
     public enum CrabbyState {IDLE, ATTACKING, HIT, DEAD, RUNNING}
 
     public CrabbyState currentState;
@@ -26,50 +27,28 @@ public class Crabby extends Enemy {
     public int maxHealth, currentHealth, powerAttack;
     private boolean runningRight;
     private Animation<TextureRegion> enemyIdle, enemyAttacking, enemyHit, enemyDead, enemyRunning;
-    private boolean isDead = false;
-    private boolean isHurting = false;
-    private boolean isAttacking = false;
-    //
+    private boolean isDead;
+    private boolean isHurting;
+    private boolean isAttacking;
     private boolean setToDestroy;
     private boolean destroyed;
 
     public Crabby(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         setBounds(getX(), getY(), 72 / Constants.PPM, 32 / Constants.PPM);
-        setToDestroy = false;
-        destroyed = false;
         //
         currentState = CrabbyState.IDLE;
         previousState = CrabbyState.IDLE;
         stateTimer = 0;
         runningRight = true;
+        setToDestroy = false;
+        destroyed = false;
+        isDead = false;
+        isAttacking = false;
+        isHurting = false;
         //
         frames = new Array<TextureRegion>();
-        for (int i = 1; i <= 9; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Crabby/Idle/Idle 0" + i + ".png")));
-        }
-        enemyIdle = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 6; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Crabby/Run/Run 0" + i + ".png")));
-        }
-        enemyRunning = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 4; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Crabby/Hit/Hit 0" + i + ".png")));
-        }
-        enemyHit = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 8; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Crabby/Dead Hit/Dead Hit 0" + i + ".png")));
-        }
-        enemyDead = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 7; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("enemy/Crabby/Attack/Attack 0" + i + ".png")));
-        }
-        enemyAttacking = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
+        initAnimation(frames);
         //
         maxHealth = Constants.CRABBY_MAXHEALTH;
         currentHealth = maxHealth;
@@ -84,12 +63,11 @@ public class Crabby extends Enemy {
             stateTimer = 0;
         }
         //
-
-        //
         b2body.setLinearVelocity(velocity);
         setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
         //
         setRegion(getFrame(dt));
+        //
     }
 
     public CrabbyState getState() {
@@ -112,7 +90,6 @@ public class Crabby extends Enemy {
                 region = enemyAttacking.getKeyFrame(stateTimer, true);
                 if (enemyAttacking.isAnimationFinished(stateTimer)) {
                     isAttacking = false;
-                    velocity.x = 0.2f;
                 }
                 break;
             case RUNNING:
@@ -136,6 +113,9 @@ public class Crabby extends Enemy {
             case IDLE:
             default:
                 region = enemyIdle.getKeyFrame(stateTimer);
+                if (enemyIdle.isAnimationFinished(stateTimer)) {
+                    velocity.x = 0.5f;
+                }
                 break;
         }
         if ((b2body.getLinearVelocity().x < 0 || !runningRight) && !region.isFlipX()) {
@@ -163,7 +143,7 @@ public class Crabby extends Enemy {
         fixtureDef.filter.categoryBits = Constants.ENEMY_BIT;
         fixtureDef.filter.maskBits = Constants.GROUND_BIT |
                 Constants.GOLD_COIN_BIT | Constants.SILVER_COIN_BIT
-                | Constants.SPIKE_BIT | Constants.ENEMY_BIT | Constants.PLAYER_BIT;
+                | Constants.SPIKE_BIT | Constants.ENEMY_BIT | Constants.PLAYER_BIT | Constants.SWORD_ATTACK_BIT;
 
         fixtureDef.shape = shape;
         b2body.createFixture(fixtureDef).setUserData(this);
@@ -177,22 +157,58 @@ public class Crabby extends Enemy {
 
     @Override
     public void getsHurt() {
-        currentHealth -= Constants.PLAYER_ATTACK;
+        Gdx.app.log("Crabby", "currentHealt:" + currentHealth);
         if (currentHealth <= 0) {
             isDead = true;
-        } else if (currentHealth < maxHealth) {
+            currentHealth = 0;
+        } else {
+            currentHealth -= Constants.PLAYER_ATTACK;
             isHurting = true;
         }
     }
 
-    public void canSeePlayer(Player player) {
-        Vector2 playerPosition = new Vector2(player.getX(), player.getY());
-        Vector2 enemyPosition = new Vector2(getX(), getY());
-        float distance = Math.abs(player.getX() - getX());
-        float attackRange = 32;
-        if (distance - attackRange <= 0) {
-            isAttacking = true;
+    @Override
+    public void getSworkAttack() {
+//        attack.setToDestroy();
+        Gdx.app.log("Crabby", "currentHealt:" + currentHealth);
+        if (currentHealth <= 0) {
+            isDead = true;
+            currentHealth = 0;
+        } else {
+            currentHealth -= 15;
+            isHurting = true;
         }
-        Gdx.app.log("canSeePlayer", "distance:" + distance);
+    }
+
+    public void initAnimation(Array<TextureRegion> frames) {
+        for (int i = 1; i <= 9; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Crabby/Idle/Idle 0" + i + ".png")));
+        }
+        enemyIdle = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 6; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Crabby/Run/Run 0" + i + ".png")));
+        }
+        enemyRunning = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 4; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Crabby/Hit/Hit 0" + i + ".png")));
+        }
+        enemyHit = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 8; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Crabby/Dead Hit/Dead Hit 0" + i + ".png")));
+        }
+        enemyDead = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 7; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("enemy/Crabby/Attack/Attack 0" + i + ".png")));
+        }
+        enemyAttacking = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 }

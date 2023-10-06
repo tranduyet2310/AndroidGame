@@ -39,8 +39,10 @@ public class SwordAttack extends Sprite {
             frames.add(new TextureRegion(Utils.getRegion("player/Sword Attack/Sword Spinning 0" + i + ".png")));
         }
         swordSpinning = new Animation<TextureRegion>(0.4f, frames);
+
         setRegion(swordSpinning.getKeyFrame(stateTime));
         setBounds(x, y, 20 / Constants.PPM, 20 / Constants.PPM);
+
         defineSwordAttack();
     }
 
@@ -61,8 +63,8 @@ public class SwordAttack extends Sprite {
         fdef.shape = shape;
         fdef.restitution = 1;
         fdef.friction = 0;
-        b2body.createFixture(fdef).setUserData(this);
         b2body.setLinearVelocity(new Vector2(attackRight ? 2 : -2, 2.5f));
+        b2body.createFixture(fdef).setUserData(this);
     }
 
     public void update(float dt) {
@@ -77,19 +79,9 @@ public class SwordAttack extends Sprite {
             b2body.setLinearVelocity(b2body.getLinearVelocity().x, 2f);
         }
         if ((attackRight && b2body.getLinearVelocity().x < 0) || (!attackRight && b2body.getLinearVelocity().x > 0)) {
-//            setToDestroy();
-            setToDestroy = true;
+            setToDestroy();
         }
     }
-
-//    public void setToDestroy(Enemy enemy) {
-//        if (enemy instanceof Crabby) {
-//            ((Crabby) enemy).currentHealth -= 20;
-//        } else if (enemy instanceof Shark) {
-//            ((Shark) enemy).currentHealth -= 20;
-//        }
-//        setToDestroy = true;
-//    }
 
     public void setToDestroy() {
         setToDestroy = true;

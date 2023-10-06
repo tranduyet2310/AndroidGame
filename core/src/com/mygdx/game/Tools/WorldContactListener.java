@@ -23,15 +23,6 @@ public class WorldContactListener implements ContactListener {
 
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
-//        if (fixA.getUserData() == "Sword" || fixB.getUserData() == "Sword") {
-//            Fixture Player = fixA.getUserData() == "Sword" ? fixA : fixB;
-//            Fixture object = Player == fixA ? fixB : fixA;
-//
-//            if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())) {
-//                ((InteractiveTileObject) object.getUserData()).onSwordHit();
-//            }
-//        }
-        //
         switch (cDef) {
             case Constants.SWORD_BIT | Constants.ENEMY_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.ENEMY_BIT)
@@ -76,6 +67,13 @@ public class WorldContactListener implements ContactListener {
                     ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
                 }
                 break;
+            case Constants.PLAYER_BIT | Constants.BIG_MAP:
+                if (fixA.getFilterData().categoryBits == Constants.BIG_MAP)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
             case Constants.PLAYER_BIT | Constants.SPIKE_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
                     ((Player) fixA.getUserData()).getsHurt(50);
@@ -100,14 +98,12 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             case Constants.SWORD_ATTACK_BIT | Constants.ENEMY_BIT:
-                if (fixA.getFilterData().categoryBits == Constants.SWORD_ATTACK_BIT) {
-                    ((SwordAttack) fixA.getUserData()).setToDestroy();
-//                    ((Enemy) fixB.getUserData()).getsHurt();
-                    Gdx.app.log("Attack", "Hit");
-                } else {
+                if (fixA.getFilterData().categoryBits == Constants.ENEMY_BIT) {
+                    ((Enemy) fixA.getUserData()).getSworkAttack();
                     ((SwordAttack) fixB.getUserData()).setToDestroy();
-//                    ((Enemy) fixA.getUserData()).getsHurt();
-                    Gdx.app.log("Attack", "Hit");
+                } else {
+                    ((Enemy) fixB.getUserData()).getSworkAttack();
+                    ((SwordAttack) fixA.getUserData()).setToDestroy();
                 }
                 break;
         }

@@ -1,7 +1,6 @@
 package com.mygdx.game.Scences;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,26 +19,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
 
-public class StatusBar implements Disposable {
+public class ConfirmDialog implements Disposable {
     public Stage stage;
     public Dialog dialog;
-    private InputMultiplexer inputMultiplexer;
     Label pauseIcon, spaceLabel, messageDialog;
     TextButton btnHome, btnReset, btnContinue;
     Skin skin;
     private static boolean check = false;
 
-    public StatusBar(SpriteBatch sb, final MyGdxGame game) {
-        Gdx.app.log("StatusBar", "onConstructor");
+    public ConfirmDialog(SpriteBatch sb, final MyGdxGame game) {
+        Gdx.app.log("ConfirmDialog", "onConstructor");
         Viewport viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-
-//        inputMultiplexer = new InputMultiplexer();
-//        inputMultiplexer.addProcessor(MapScreen.this);
-//        inputMultiplexer.addProcessor(stage);
-//        Gdx.input.setInputProcessor(inputMultiplexer);
         Gdx.input.setInputProcessor(stage);
 
         Table table = new Table(skin);
@@ -64,7 +57,6 @@ public class StatusBar implements Disposable {
         dialog.getButtonTable().add(btnHome);
         dialog.getButtonTable().add(btnReset);
         dialog.getButtonTable().add(btnContinue);
-//        dialog.button(btnContinue, false);
 
         stage.addActor(table);
         pauseIcon.addListener(new ClickListener(){

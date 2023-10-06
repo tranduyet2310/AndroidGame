@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.Tools.Utils;
 
 public class OptionScreen implements Screen {
     private MyGdxGame game;
@@ -60,7 +59,7 @@ public class OptionScreen implements Screen {
         updateValue();
 
         audioManager = AudioManager.getInstance();
-        music = audioManager.getMusic(Utils.MUSIC_MENU);
+        music = audioManager.getMusic(Constants.MUSIC_MENU);
         music.setLooping(true);
         music.setVolume(MyGdxGame.MUSIC_VOLUME);
 

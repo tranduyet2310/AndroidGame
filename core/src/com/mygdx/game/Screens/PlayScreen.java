@@ -20,17 +20,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Scences.ConfirmDialog;
 import com.mygdx.game.Scences.Hud;
 import com.mygdx.game.Scences.LifeBar;
-import com.mygdx.game.Scences.StatusBar;
 import com.mygdx.game.Sprites.Enemies.Enemy;
-import com.mygdx.game.Sprites.Items.GoldCoin;
+import com.mygdx.game.Sprites.Items.Maps.BigMap;
+import com.mygdx.game.Sprites.Items.RequestedItems.GoldCoin;
 import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Sprites.Items.ItemDef;
-import com.mygdx.game.Sprites.Items.SilverCoin;
+import com.mygdx.game.Sprites.Items.RequestedItems.SilverCoin;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.B2WorldCreator;
-import com.mygdx.game.Tools.Utils;
 import com.mygdx.game.Tools.WorldContactListener;
 
 import java.util.concurrent.LinkedBlockingDeque;
@@ -40,7 +40,7 @@ public class PlayScreen implements Screen {
     private OrthographicCamera gameCam;
     private Viewport gamePort;
     private Hud hud;
-    private StatusBar statusBar;
+    private ConfirmDialog confirmDialog;
     //    Tiled map variables
     private TmxMapLoader mapLoader;
     private TiledMap map;
@@ -57,8 +57,6 @@ public class PlayScreen implements Screen {
     //    Calculate map
     private TiledMapTileLayer mapTileLayer;
     private float evalHeight, evalWidth, totalMapWidth;
-//    public static final Float minZoom = 0.1f;
-//    public static final Float maxZoom = 1f;
 
     //    Music
     private Sound sound;
@@ -67,6 +65,7 @@ public class PlayScreen implements Screen {
     // Item
     private Array<Item> items;
     private LinkedBlockingDeque<ItemDef> itemsToSpawn;
+    private Array<Enemy> enemies;
 
     public PlayScreen(MyGdxGame game) {
 //        atlas = new TextureAtlas("player.atlas");
@@ -77,7 +76,7 @@ public class PlayScreen implements Screen {
         gamePort = new FitViewport(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM, gameCam);
         // Create our game HUD for timer/level info
         hud = new Hud(game.batch);
-        statusBar = new StatusBar(game.batch, game);
+        confirmDialog = new ConfirmDialog(game.batch, game);
         // Load our map and setup our map renderer
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("map1.tmx");
@@ -98,10 +97,9 @@ public class PlayScreen implements Screen {
         world.setContactListener(new WorldContactListener());
 
         audioManager = AudioManager.getInstance();
-        music = audioManager.getMusic(Utils.MUSIC_LEVEL2);
+        music = audioManager.getMusic(Constants.MUSIC_LEVEL2);
         music.setLooping(true);
         music.setVolume(MyGdxGame.MUSIC_VOLUME);
-
 
         // get the width and height of map
         int mapWidthInTiles = mapTileLayer.getWidth();
@@ -109,20 +107,15 @@ public class PlayScreen implements Screen {
         // get the width and height of tile
         float tileWidth = mapTileLayer.getTileWidth();
 //        float tileHeight = mapTileLayer.getTileHeight();
-        // Caculate the width and height of the map in pixel (Fix sẵn độ dài và rộng mã khi thiết kế rồi nền để nguyên luôn)
+        // Caculate the width and height of the map in pixel
         totalMapWidth = mapWidthInTiles * tileWidth / Constants.PPM;
 //        totalMapHeight = mapHeightInTiles * tileHeight;
 
-//        evalWidth = gamePort.getWorldWidth() * gameCam.zoom;
-//        evalHeight = gamePort.getWorldHeight() * gameCam.zoom;
-//
-//        gameCam.position.x = MathUtils.clamp(gameCam.position.x, evalWidth / 2f, totalMapWidth - evalWidth / 2f);
-//        gameCam.position.y = MathUtils.clamp(gameCam.position.y, evalHeight / 2f, MyGdxGame.V_HEIGHT - evalHeight / 2f);
-//        gameCam.zoom = MathUtils.clamp(gameCam.zoom, minZoom, maxZoom);
         items = new Array<Item>();
         itemsToSpawn = new LinkedBlockingDeque<ItemDef>();
         //
         lifeBar = new LifeBar(game.batch, player);
+        enemies = creator.getEnemies();
     }
 
     public void spwanItem(ItemDef idef) {
@@ -136,62 +129,86 @@ public class PlayScreen implements Screen {
                 items.add(new GoldCoin(this, idef.position.x, idef.position.y));
             } else if (idef.type == SilverCoin.class) {
                 items.add(new SilverCoin(this, idef.position.x, idef.position.y));
+            } else if (idef.type == BigMap.class) {
+                items.add(new BigMap(this, idef.position.x, idef.position.y));
             }
+//            else if (idef.type == GoldenSkull.class) {
+//                items.add(new GoldenSkull(this, idef.position.x, idef.position.y));
+//            } else if (idef.type == BlueDiamond.class) {
+//                items.add(new BlueDiamond(this, idef.position.x, idef.position.y));
+//            } else if (idef.type == BluePoition.class) {
+//                items.add(new BluePoition(this, idef.position.x, idef.position.y));
+//            } else if (idef.type == GreenPoition.class) {
+//                items.add(new GreenPoition(this, idef.position.x, idef.position.y));
+//            } else if (idef.type == RedPoition.class) {
+//                items.add(new RedPoition(this, idef.position.x, idef.position.y));
+//            }
 
+//            else if (idef.type == SmallMap1.class) {
+//                items.add(new SmallMap1(this, idef.position.x, idef.position.y));
+//            } else if (idef.type == SmallMap2.class) {
+//                items.add(new SmallMap2(this, idef.position.x, idef.position.y));
+//            } else if (idef.type == SmallMap3.class) {
+//                items.add(new SmallMap3(this, idef.position.x, idef.position.y));
+//            } else if (idef.type == SmallMap4.class) {
+//                items.add(new SmallMap4(this, idef.position.x, idef.position.y));
+//            }
         }
     }
 
     public void handleInput(float dt) {
-        // jump
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && !hasJupmed) {
-            player.b2Body.applyLinearImpulse(new Vector2(0, 4f), player.b2Body.getWorldCenter(), true);
-            hasJupmed = true;
-            sound = audioManager.getSound(Utils.SOUND_JUMP);
-            long idSound = sound.play(0.5f);
-            sound.setPitch(idSound, 1);
-            sound.setLooping(idSound, false);
-        }
-        // jump + attack
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            player.isAirAttack = true;
-            sound = audioManager.getSound(Utils.SOUND_ATTACK2);
-            long idSound = sound.play(0.5f);
-            sound.setLooping(idSound, false);
-        } else player.isAirAttack = false;
-        // no cumulative force
-        if (player.b2Body.getLinearVelocity().y >= 4)
-            player.b2Body.getLinearVelocity().y = 0;
-        // fall to ground
-        if (player.b2Body.getLinearVelocity().y == 0) {
-            hasJupmed = false;
-        }
-        // moveright
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2Body.getLinearVelocity().x <= 2) {
-            player.b2Body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2Body.getWorldCenter(), true);
-        }
-        // move left
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2Body.getLinearVelocity().x >= -2) {
-            player.b2Body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2Body.getWorldCenter(), true);
-        }
-        // Attack
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            player.isAttacking = true;
-            sound = audioManager.getSound(Utils.SOUND_ATTACK1);
-            long idSound = sound.play(0.2f);
-            sound.setLooping(idSound, false);
-        } else player.isAttacking = false;
-        // player dead
-        if (player.getState() == Player.State.DEAD) {
-            if (!playSoundOnceTime) {
-                sound = audioManager.getSound(Utils.SOUND_DIE);
+        if (!player.isDead()) {
+            // jump
+            if (Gdx.input.isKeyPressed(Input.Keys.UP) && !hasJupmed) {
+                player.b2Body.applyLinearImpulse(new Vector2(0, 4f), player.b2Body.getWorldCenter(), true);
+                hasJupmed = true;
+                sound = audioManager.getSound(Constants.SOUND_JUMP);
+                long idSound = sound.play(0.5f);
+                sound.setPitch(idSound, 1);
+                sound.setLooping(idSound, false);
+            }
+            // jump + attack
+            if (Gdx.input.isKeyPressed(Input.Keys.UP) && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                player.isAirAttack = true;
+                sound = audioManager.getSound(Constants.SOUND_ATTACK2);
                 long idSound = sound.play(0.5f);
                 sound.setLooping(idSound, false);
-                playSoundOnceTime = true;
+            } else player.isAirAttack = false;
+            // no cumulative force
+            if (player.b2Body.getLinearVelocity().y >= 4)
+                player.b2Body.getLinearVelocity().y = 0;
+            // fall to ground
+            if (player.b2Body.getLinearVelocity().y == 0) {
+                hasJupmed = false;
             }
+            // moveright
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2Body.getLinearVelocity().x <= 2) {
+                player.b2Body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2Body.getWorldCenter(), true);
+            }
+            // move left
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2Body.getLinearVelocity().x >= -2) {
+                player.b2Body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2Body.getWorldCenter(), true);
+            }
+            // Attack
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                player.isAttacking = true;
+                sound = audioManager.getSound(Constants.SOUND_ATTACK1);
+                long idSound = sound.play(0.2f);
+                sound.setLooping(idSound, false);
+            } else player.isAttacking = false;
+            // player dead
+            if (player.getState() == Player.State.DEAD) {
+                if (!playSoundOnceTime) {
+                    sound = audioManager.getSound(Constants.SOUND_DIE);
+                    long idSound = sound.play(0.5f);
+                    sound.setLooping(idSound, false);
+                    playSoundOnceTime = true;
+                }
+            }
+            //
+            if (Gdx.input.isKeyJustPressed(Input.Keys.B))
+                player.attack();
         }
-        //
-        if (Gdx.input.isKeyPressed(Input.Keys.B))
-            player.attack();
     }
 
     public void update(float dt) {
@@ -203,19 +220,23 @@ public class PlayScreen implements Screen {
 
         player.update(dt);
 
-        for (Enemy enemy : creator.getEnemies()) {
+        for (Enemy enemy : enemies) {
             enemy.update(dt);
             if (enemy.getX() < player.getX() + 320 / Constants.PPM)
                 enemy.b2body.setActive(true);
+//            Gdx.app.log("Enemy", "Size: "+enemies.size);
+            if (enemy.isDestroyed()) {
+                enemies.removeValue(enemy, true);
+//                Gdx.app.log("Enemy", "Size: "+enemies.size);
+            }
         }
 
         for (Item item : items) {
             item.update(dt);
         }
 
-
         hud.update(dt);
-        statusBar.update(dt);
+        confirmDialog.update(dt);
         lifeBar.update(dt);
 
         // attach our gamecam to our player.x and player.y coordinate
@@ -257,8 +278,7 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
         player.draw(game.batch);
-
-        for (Enemy enemy : creator.getEnemies()) {
+        for (Enemy enemy : enemies) {
             enemy.draw(game.batch);
         }
 
@@ -271,8 +291,8 @@ public class PlayScreen implements Screen {
         // Set our batch to now draw what the Hud camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
-        statusBar.stage.act();
-        statusBar.stage.draw();
+        confirmDialog.stage.act();
+        confirmDialog.stage.draw();
         lifeBar.stage.act();
         lifeBar.stage.draw();
         //
@@ -323,7 +343,7 @@ public class PlayScreen implements Screen {
         b2dr.dispose();
         hud.dispose();
         music.stop();
-        statusBar.dispose();
+        confirmDialog.dispose();
         lifeBar.dispose();
 //        music.dispose();
 //        sound.dispose();

@@ -1,5 +1,6 @@
 package com.mygdx.game.Sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -30,13 +31,15 @@ public class Player extends Sprite {
     private TextureRegion playerStand;
     private Animation<TextureRegion> playerRun, playerJump, playerIdle, playerFalling, playerAttacking, playerAirAttack, playerHit, playerDead;
     private float stateTimer;
-    private int maxHealth, currentHealth, powerAttack;
+    private int maxHealth, currentHealth, powerAttack, maxMana, currentMana;
+    private float timeToRegenerateMana;
     private boolean runningRight;
-    public boolean isAttacking = false;
-    public boolean isAirAttack = false;
-    public boolean takeDamage;
-    public boolean isDead;
+    public boolean isAttacking;
+    public boolean isAirAttack;
+    private boolean takeDamage;
+    private boolean isDead;
     private Array<SwordAttack> swordAttacks;
+    private Array<TextureRegion> frames;
 
     public Player(PlayScreen screen, float x, float y) {
         this.screen = screen;
@@ -45,60 +48,28 @@ public class Player extends Sprite {
         previousState = State.STANDING;
         stateTimer = 0;
         runningRight = true;
-
+        //
+        isAttacking = false;
+        isAirAttack = false;
+        takeDamage = false;
+        isDead = false;
+        //
         setPosition(x, y);
-
-        Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i = 1; i <= 5; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("player/Idle Sword/Idle Sword 0" + i + ".png")));
-        }
-        playerIdle = new Animation<TextureRegion>(0.2f, frames);
-        frames.clear();
-        for (int i = 1; i <= 6; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("player/Run Sword/Run Sword 0" + i + ".png")));
-        }
-        playerRun = new Animation<TextureRegion>(0.3f, frames);
-        frames.clear();
-        for (int i = 1; i <= 3; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("player/Jump Sword/Jump Sword 0" + i + ".png")));
-        }
-        playerJump = new Animation<TextureRegion>(0.3f, frames);
-        frames.clear();
-        for (int i = 1; i <= 3; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("player/Fall Sword/Fall 0" + i + ".png")));
-        }
-        playerFalling = new Animation<TextureRegion>(0.3f, frames);
-        frames.clear();
-        for (int i = 1; i <= 9; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("player/Attack 1/Attack 1 0" + i + ".png")));
-        }
-        playerAttacking = new Animation<TextureRegion>(0.3f, frames);
-        frames.clear();
-        for (int i = 1; i <= 6; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("player/Air Attack 1/Air Attack 1 0" + i + ".png")));
-        }
-        playerAirAttack = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 4; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("player/Dead Hit/Dead Hit 0" + i + ".png")));
-        }
-        playerDead = new Animation<TextureRegion>(0.4f, frames);
-        frames.clear();
-        for (int i = 1; i <= 4; i++) {
-            frames.add(new TextureRegion(Utils.getRegion("player/Hit Sword/Hit Sword 0" + i + ".png")));
-        }
-        playerHit = new Animation<TextureRegion>(0.4f, frames);
-
+        // define Player animation
+        frames = new Array<TextureRegion>();
+        initAnimation(frames);
         // define player character in Box2d
         definePlayer();
+        // set default animation
         playerStand = new TextureRegion(Utils.getRegion("player/Idle Sword/Idle Sword 01.png"));
-        setBounds(0, 0, 64 / Constants.PPM, 48 / Constants.PPM);
         setRegion(playerStand);
-
         //
-        maxHealth = Constants.PLAYER_MAXHEALTH;
-        currentHealth = maxHealth;
+        setBounds(0, 0, 64 / Constants.PPM, 48 / Constants.PPM);
+        // inital value of player
+        currentHealth = maxHealth = Constants.PLAYER_MAXHEALTH;
         powerAttack = Constants.PLAYER_ATTACK;
+        currentMana = maxMana = Constants.PLAYER_MAXMANA;
+        timeToRegenerateMana = 0;
         //
         swordAttacks = new Array<SwordAttack>();
     }
@@ -106,12 +77,24 @@ public class Player extends Sprite {
     public void update(float dt) {
         setPosition(b2Body.getPosition().x - getWidth() / 2, b2Body.getPosition().y - getHeight() / 2);
         setRegion(getFrame(dt));
+        // Automatically restores mana
+        timeToRegenerateMana += dt;
+        if (timeToRegenerateMana >= 2.0f) {
+            if (currentMana < maxMana) {
+                currentMana += 5;
+            }
+            timeToRegenerateMana = 0;
+        }
 
         for (SwordAttack swordAttack : swordAttacks) {
             swordAttack.update(dt);
-            if (swordAttack.isDestroyed())
+            if (swordAttack.isDestroyed()) {
                 swordAttacks.removeValue(swordAttack, true);
+                Gdx.app.log("Attack", "in update():" + swordAttacks.size);
+            }
         }
+
+        checkCurrentHealth();
     }
 
     public TextureRegion getFrame(float dt) {
@@ -170,7 +153,7 @@ public class Player extends Sprite {
             return State.RUNNING;
         else if (isAttacking) {
             return State.ATTACKING;
-        } else if (StateManager.playerOnWater || currentHealth <= 0) {
+        } else if (isDead) {
             return State.DEAD;
         } else if (takeDamage) {
             return State.HIT;
@@ -190,7 +173,7 @@ public class Player extends Sprite {
         fixtureDef.filter.maskBits = Constants.GROUND_BIT |
                 Constants.GOLD_COIN_BIT | Constants.SILVER_COIN_BIT | Constants.ENEMY_BIT |
                 Constants.SPIKE_BIT | Constants.WATER_BIT | Constants.SPECIAL_ITEM_BIT | Constants.BLUE_DIAMOND |
-                Constants.GOLDEN_SKULL;
+                Constants.GOLDEN_SKULL | Constants.BIG_MAP;
 
         fixtureDef.shape = shape;
         b2Body.createFixture(fixtureDef).setUserData(this);
@@ -203,18 +186,65 @@ public class Player extends Sprite {
         swordDef.shape = swordShape;
         swordDef.isSensor = true;
         b2Body.createFixture(swordDef).setUserData(this);
+    }
 
-//        EdgeShape head = new EdgeShape();
-//        head.set(new Vector2(-2 / MyGdxGame.PPM, 10/ MyGdxGame.PPM), new Vector2(2 / MyGdxGame.PPM, 10/ MyGdxGame.PPM));
-//        fixtureDef.shape = head;
-        //fixtureDef.isSensor = true;
-        //b2Body.createFixture(fixtureDef);
-        //b2Body.setUserData("Player");
+    public void initAnimation(Array<TextureRegion> frames) {
+        for (int i = 1; i <= 5; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Idle Sword/Idle Sword 0" + i + ".png")));
+        }
+        playerIdle = new Animation<TextureRegion>(0.2f, frames);
+        frames.clear();
+        for (int i = 1; i <= 6; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Run Sword/Run Sword 0" + i + ".png")));
+        }
+        playerRun = new Animation<TextureRegion>(0.3f, frames);
+        frames.clear();
+        for (int i = 1; i <= 3; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Jump Sword/Jump Sword 0" + i + ".png")));
+        }
+        playerJump = new Animation<TextureRegion>(0.3f, frames);
+        frames.clear();
+        for (int i = 1; i <= 3; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Fall Sword/Fall 0" + i + ".png")));
+        }
+        playerFalling = new Animation<TextureRegion>(0.3f, frames);
+        frames.clear();
+        for (int i = 1; i <= 9; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Attack 1/Attack 1 0" + i + ".png")));
+        }
+        playerAttacking = new Animation<TextureRegion>(0.3f, frames);
+        frames.clear();
+        for (int i = 1; i <= 6; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Air Attack 1/Air Attack 1 0" + i + ".png")));
+        }
+        playerAirAttack = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 4; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Dead Hit/Dead Hit 0" + i + ".png")));
+        }
+        playerDead = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+        for (int i = 1; i <= 4; i++) {
+            frames.add(new TextureRegion(Utils.getRegion("player/Hit Sword/Hit Sword 0" + i + ".png")));
+        }
+        playerHit = new Animation<TextureRegion>(0.4f, frames);
+        frames.clear();
+    }
+
+    public void checkCurrentHealth() {
+        if (currentHealth == 0)
+            isDead = true;
+        if (Utils.isPlayerOnWater()) {
+            currentHealth -= maxHealth;
+            isDead = true;
+            Utils.setPlayerOnWater(false);
+        }
     }
 
     public void getsHurt(int damage) {
         takeDamage = true;
-        currentHealth -= damage;
+        if (currentHealth <= 0) currentHealth = 0;
+        else currentHealth -= damage;
     }
 
     public int getCurrentHealth() {
@@ -229,13 +259,22 @@ public class Player extends Sprite {
         return stateTimer;
     }
 
+    public int getCurrentMana() {
+        return currentMana;
+    }
+
     public void attack() {
-        swordAttacks.add(new SwordAttack(screen, b2Body.getPosition().x, b2Body.getPosition().y, runningRight ? true : false));
+        Gdx.app.log("Attack", "in attack()");
+        if (currentMana >= 10) {
+            currentMana -= 10;
+            swordAttacks.add(new SwordAttack(screen, b2Body.getPosition().x, b2Body.getPosition().y, runningRight));
+        }
     }
 
     public void draw(Batch batch) {
         super.draw(batch);
         for (SwordAttack attack : swordAttacks) {
+            Gdx.app.log("Attack", "in draw(): " + swordAttacks.size);
             attack.draw(batch);
         }
     }

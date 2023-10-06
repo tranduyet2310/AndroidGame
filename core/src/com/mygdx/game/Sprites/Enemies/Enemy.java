@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Player;
+import com.mygdx.game.Sprites.Sword.SwordAttack;
 
 public abstract class Enemy extends Sprite {
     protected World world;
@@ -24,7 +25,9 @@ public abstract class Enemy extends Sprite {
 
     protected abstract void defineEnemy();
     public abstract void getsHurt();
+    public abstract void getSworkAttack();
     public abstract void update(float dt);
+    public abstract boolean isDestroyed();
     public void reverseVelocity(boolean x, boolean y){
         if(x)
             velocity.x = -velocity.x;
