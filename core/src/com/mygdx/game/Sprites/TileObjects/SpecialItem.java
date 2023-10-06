@@ -6,6 +6,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Items.Maps.BigMap;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap1;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap2;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap3;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap4;
+import com.mygdx.game.Sprites.Items.Poitions.BluePoition;
+import com.mygdx.game.Sprites.Items.Poitions.GreenPoition;
+import com.mygdx.game.Sprites.Items.Poitions.RedPoition;
 import com.mygdx.game.Sprites.Items.RequestedItems.GoldCoin;
 import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.RequestedItems.SilverCoin;
@@ -26,19 +33,19 @@ public class SpecialItem extends InteractiveTileObject {
         } else if (object.getProperties().containsKey("silver_coin")) {
             screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SilverCoin.class));
         } else if (object.getProperties().containsKey("red_potion")) {
-            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SilverCoin.class));
+            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), RedPoition.class));
         } else if (object.getProperties().containsKey("blue_poition")) {
-            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SilverCoin.class));
+            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), BluePoition.class));
         } else if (object.getProperties().containsKey("green_poition")) {
-            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SilverCoin.class));
+            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), GreenPoition.class));
         } else if (object.getProperties().containsKey("small_map1")) {
-            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SilverCoin.class));
+            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SmallMap1.class));
         } else if (object.getProperties().containsKey("small_map2")) {
-            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SilverCoin.class));
+            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SmallMap2.class));
         } else if (object.getProperties().containsKey("small_map3")) {
-            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SilverCoin.class));
+            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SmallMap3.class));
         } else if (object.getProperties().containsKey("small_map4")) {
-            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SilverCoin.class));
+            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SmallMap4.class));
         } else if (object.getProperties().containsKey("big_map")) {
             screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), BigMap.class));
         }

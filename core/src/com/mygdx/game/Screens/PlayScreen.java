@@ -25,6 +25,13 @@ import com.mygdx.game.Scences.Hud;
 import com.mygdx.game.Scences.LifeBar;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.Maps.BigMap;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap1;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap2;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap3;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap4;
+import com.mygdx.game.Sprites.Items.Poitions.BluePoition;
+import com.mygdx.game.Sprites.Items.Poitions.GreenPoition;
+import com.mygdx.game.Sprites.Items.Poitions.RedPoition;
 import com.mygdx.game.Sprites.Items.RequestedItems.GoldCoin;
 import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Sprites.Items.ItemDef;
@@ -136,23 +143,22 @@ public class PlayScreen implements Screen {
 //                items.add(new GoldenSkull(this, idef.position.x, idef.position.y));
 //            } else if (idef.type == BlueDiamond.class) {
 //                items.add(new BlueDiamond(this, idef.position.x, idef.position.y));
-//            } else if (idef.type == BluePoition.class) {
-//                items.add(new BluePoition(this, idef.position.x, idef.position.y));
-//            } else if (idef.type == GreenPoition.class) {
-//                items.add(new GreenPoition(this, idef.position.x, idef.position.y));
-//            } else if (idef.type == RedPoition.class) {
-//                items.add(new RedPoition(this, idef.position.x, idef.position.y));
 //            }
-
-//            else if (idef.type == SmallMap1.class) {
-//                items.add(new SmallMap1(this, idef.position.x, idef.position.y));
-//            } else if (idef.type == SmallMap2.class) {
-//                items.add(new SmallMap2(this, idef.position.x, idef.position.y));
-//            } else if (idef.type == SmallMap3.class) {
-//                items.add(new SmallMap3(this, idef.position.x, idef.position.y));
-//            } else if (idef.type == SmallMap4.class) {
-//                items.add(new SmallMap4(this, idef.position.x, idef.position.y));
-//            }
+            else if (idef.type == BluePoition.class) {
+                items.add(new BluePoition(this, idef.position.x, idef.position.y));
+            } else if (idef.type == GreenPoition.class) {
+                items.add(new GreenPoition(this, idef.position.x, idef.position.y));
+            } else if (idef.type == RedPoition.class) {
+                items.add(new RedPoition(this, idef.position.x, idef.position.y));
+            } else if (idef.type == SmallMap1.class) {
+                items.add(new SmallMap1(this, idef.position.x, idef.position.y));
+            } else if (idef.type == SmallMap2.class) {
+                items.add(new SmallMap2(this, idef.position.x, idef.position.y));
+            } else if (idef.type == SmallMap3.class) {
+                items.add(new SmallMap3(this, idef.position.x, idef.position.y));
+            } else if (idef.type == SmallMap4.class) {
+                items.add(new SmallMap4(this, idef.position.x, idef.position.y));
+            }
         }
     }
 

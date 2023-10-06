@@ -170,10 +170,10 @@ public class Player extends Sprite {
         CircleShape shape = new CircleShape();
         shape.setRadius(12 / Constants.PPM);
         fixtureDef.filter.categoryBits = Constants.PLAYER_BIT;
-        fixtureDef.filter.maskBits = Constants.GROUND_BIT |
-                Constants.GOLD_COIN_BIT | Constants.SILVER_COIN_BIT | Constants.ENEMY_BIT |
-                Constants.SPIKE_BIT | Constants.WATER_BIT | Constants.SPECIAL_ITEM_BIT | Constants.BLUE_DIAMOND |
-                Constants.GOLDEN_SKULL | Constants.BIG_MAP;
+        fixtureDef.filter.maskBits = Constants.GROUND_BIT | Constants.ENEMY_BIT |
+                Constants.SPIKE_BIT | Constants.WATER_BIT | Constants.SPECIAL_ITEM_BIT |
+                Constants.BLUE_DIAMOND | Constants.GOLD_COIN_BIT | Constants.SILVER_COIN_BIT | Constants.GOLDEN_SKULL |
+                Constants.BIG_MAP | Constants.SMALL_MAP_1 | Constants.SMALL_MAP_2 | Constants.SMALL_MAP_3 | Constants.SMALL_MAP_4;
 
         fixtureDef.shape = shape;
         b2Body.createFixture(fixtureDef).setUserData(this);

@@ -20,13 +20,13 @@ public class Constants {
     public static final short SPECIAL_ITEM_BIT = 2048;
     public static final short SWORD_ATTACK_BIT = 4096;
     public static final short SWORD_BIT = 500;
-//    public static final short SMALL_MAP_1 = 3;
-//    public static final short SMALL_MAP_2 = 5;
-//    public static final short SMALL_MAP_3 = 12;
-//    public static final short SMALL_MAP_4 = 24;
-//    public static final short RED_POITION_BIT = 96;
-//    public static final short BLUE_POITION_BIT = 192;
-//    public static final short GREEN_POITION_BIT = 384;
+    public static final short SMALL_MAP_1 = 17;
+    public static final short SMALL_MAP_2 = 7;
+    public static final short SMALL_MAP_3 = 9;
+    public static final short SMALL_MAP_4 = 12;
+    public static final short BLUE_POITION_BIT = 13;
+    public static final short RED_POITION_BIT = 20;
+    public static final short GREEN_POITION_BIT = 21;
 
     // flag to change screen
     public static final int MAP = 0;

@@ -24,6 +24,7 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
 
         switch (cDef) {
+            // Collision sword with enemy
             case Constants.SWORD_BIT | Constants.ENEMY_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.ENEMY_BIT)
                     ((Enemy) fixA.getUserData()).getsHurt();
@@ -31,6 +32,7 @@ public class WorldContactListener implements ContactListener {
                     ((Enemy) fixB.getUserData()).getsHurt();
                 }
                 break;
+            // Collision player take damage
             case Constants.PLAYER_BIT | Constants.ENEMY_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
                     if (fixB.getUserData() instanceof Crabby) {
@@ -42,17 +44,12 @@ public class WorldContactListener implements ContactListener {
                     }
                 }
                 break;
-            case Constants.ENEMY_BIT | Constants.SPIKE_BIT:
-                if (fixA.getFilterData().categoryBits == Constants.ENEMY_BIT)
-                    ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
-                else {
-                    ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
-                }
-                break;
+            // Collision between two enemies
             case Constants.ENEMY_BIT:
                 ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
                 ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
                 break;
+            // Collision with Items
             case Constants.PLAYER_BIT | Constants.GOLD_COIN_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.GOLD_COIN_BIT)
                     ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
@@ -74,6 +71,56 @@ public class WorldContactListener implements ContactListener {
                     ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
                 }
                 break;
+            case Constants.PLAYER_BIT | Constants.SMALL_MAP_1:
+                if (fixA.getFilterData().categoryBits == Constants.SMALL_MAP_1)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.SMALL_MAP_2:
+                if (fixA.getFilterData().categoryBits == Constants.SMALL_MAP_2)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.SMALL_MAP_3:
+                if (fixA.getFilterData().categoryBits == Constants.SMALL_MAP_3)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.SMALL_MAP_4:
+                if (fixA.getFilterData().categoryBits == Constants.SMALL_MAP_4)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.BLUE_POITION_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.BLUE_POITION_BIT)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.RED_POITION_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.RED_POITION_BIT)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.GREEN_POITION_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.GREEN_POITION_BIT)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            // Collision with Object
             case Constants.PLAYER_BIT | Constants.SPIKE_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
                     ((Player) fixA.getUserData()).getsHurt(50);
@@ -90,6 +137,14 @@ public class WorldContactListener implements ContactListener {
                     ((InteractiveTileObject) fixA.getUserData()).onHeadHit();
                 }
                 break;
+            case Constants.ENEMY_BIT | Constants.SPIKE_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.ENEMY_BIT)
+                    ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
+                else {
+                    ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
+                }
+                break;
+            // Collision to get special item
             case Constants.PLAYER_BIT | Constants.SPECIAL_ITEM_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
                     ((InteractiveTileObject) fixB.getUserData()).onHeadHit();
@@ -97,6 +152,7 @@ public class WorldContactListener implements ContactListener {
                     ((InteractiveTileObject) fixA.getUserData()).onHeadHit();
                 }
                 break;
+            // Collision to deploy skill
             case Constants.SWORD_ATTACK_BIT | Constants.ENEMY_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.ENEMY_BIT) {
                     ((Enemy) fixA.getUserData()).getSworkAttack();
