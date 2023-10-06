@@ -24,6 +24,7 @@ import com.mygdx.game.Scences.ConfirmDialog;
 import com.mygdx.game.Scences.Hud;
 import com.mygdx.game.Scences.LifeBar;
 import com.mygdx.game.Sprites.Enemies.Enemy;
+import com.mygdx.game.Sprites.Items.ChestKey;
 import com.mygdx.game.Sprites.Items.Maps.BigMap;
 import com.mygdx.game.Sprites.Items.Maps.SmallMap1;
 import com.mygdx.game.Sprites.Items.Maps.SmallMap2;
@@ -32,9 +33,12 @@ import com.mygdx.game.Sprites.Items.Maps.SmallMap4;
 import com.mygdx.game.Sprites.Items.Poitions.BluePoition;
 import com.mygdx.game.Sprites.Items.Poitions.GreenPoition;
 import com.mygdx.game.Sprites.Items.Poitions.RedPoition;
+import com.mygdx.game.Sprites.Items.RequestedItems.BlueDiamond;
 import com.mygdx.game.Sprites.Items.RequestedItems.GoldCoin;
 import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Sprites.Items.ItemDef;
+import com.mygdx.game.Sprites.Items.RequestedItems.GoldenSkull;
+import com.mygdx.game.Sprites.Items.RequestedItems.RedDiamond;
 import com.mygdx.game.Sprites.Items.RequestedItems.SilverCoin;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.B2WorldCreator;
@@ -138,13 +142,11 @@ public class PlayScreen implements Screen {
                 items.add(new SilverCoin(this, idef.position.x, idef.position.y));
             } else if (idef.type == BigMap.class) {
                 items.add(new BigMap(this, idef.position.x, idef.position.y));
-            }
-//            else if (idef.type == GoldenSkull.class) {
-//                items.add(new GoldenSkull(this, idef.position.x, idef.position.y));
-//            } else if (idef.type == BlueDiamond.class) {
-//                items.add(new BlueDiamond(this, idef.position.x, idef.position.y));
-//            }
-            else if (idef.type == BluePoition.class) {
+            } else if (idef.type == GoldenSkull.class) {
+                items.add(new GoldenSkull(this, idef.position.x, idef.position.y));
+            } else if (idef.type == BlueDiamond.class) {
+                items.add(new BlueDiamond(this, idef.position.x, idef.position.y));
+            } else if (idef.type == BluePoition.class) {
                 items.add(new BluePoition(this, idef.position.x, idef.position.y));
             } else if (idef.type == GreenPoition.class) {
                 items.add(new GreenPoition(this, idef.position.x, idef.position.y));
@@ -158,6 +160,10 @@ public class PlayScreen implements Screen {
                 items.add(new SmallMap3(this, idef.position.x, idef.position.y));
             } else if (idef.type == SmallMap4.class) {
                 items.add(new SmallMap4(this, idef.position.x, idef.position.y));
+            } else if (idef.type == RedDiamond.class) {
+                items.add(new RedDiamond(this, idef.position.x, idef.position.y));
+            } else if (idef.type == ChestKey.class) {
+                items.add(new ChestKey(this, idef.position.x, idef.position.y));
             }
         }
     }

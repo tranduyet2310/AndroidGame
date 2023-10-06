@@ -27,6 +27,8 @@ public class Constants {
     public static final short BLUE_POITION_BIT = 13;
     public static final short RED_POITION_BIT = 20;
     public static final short GREEN_POITION_BIT = 21;
+    public static final short RED_DIAMOND = 24;
+    public static final short CHEST_KEY = 28;
 
     // flag to change screen
     public static final int MAP = 0;

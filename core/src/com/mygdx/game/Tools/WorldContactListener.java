@@ -64,6 +64,34 @@ public class WorldContactListener implements ContactListener {
                     ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
                 }
                 break;
+            case Constants.PLAYER_BIT | Constants.BLUE_DIAMOND:
+                if (fixA.getFilterData().categoryBits == Constants.BLUE_DIAMOND)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.GOLDEN_SKULL:
+                if (fixA.getFilterData().categoryBits == Constants.GOLDEN_SKULL)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.RED_DIAMOND:
+                if (fixA.getFilterData().categoryBits == Constants.RED_DIAMOND)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.CHEST_KEY:
+                if (fixA.getFilterData().categoryBits == Constants.CHEST_KEY)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
             case Constants.PLAYER_BIT | Constants.BIG_MAP:
                 if (fixA.getFilterData().categoryBits == Constants.BIG_MAP)
                     ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
