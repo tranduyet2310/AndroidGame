@@ -40,8 +40,10 @@ import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.RequestedItems.GoldenSkull;
 import com.mygdx.game.Sprites.Items.RequestedItems.RedDiamond;
 import com.mygdx.game.Sprites.Items.RequestedItems.SilverCoin;
+import com.mygdx.game.Sprites.NPC.NPC;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.B2WorldCreator;
+import com.mygdx.game.Tools.Utils;
 import com.mygdx.game.Tools.WorldContactListener;
 
 import java.util.concurrent.LinkedBlockingDeque;
@@ -127,6 +129,10 @@ public class PlayScreen implements Screen {
         //
         lifeBar = new LifeBar(game.batch, player);
         enemies = creator.getEnemies();
+        // inital default value for flag
+        Utils.setPlayerOnWater(false);
+        Utils.setCompleteRequest(false);
+        Utils.setIsMap1(true);
     }
 
     public void spwanItem(ItemDef idef) {
@@ -247,6 +253,10 @@ public class PlayScreen implements Screen {
             item.update(dt);
         }
 
+        for (NPC npc : creator.getNpcs()){
+            npc.update(dt);
+        }
+
         hud.update(dt);
         confirmDialog.update(dt);
         lifeBar.update(dt);
@@ -296,6 +306,10 @@ public class PlayScreen implements Screen {
 
         for (Item item : items) {
             item.draw(game.batch);
+        }
+
+        for (NPC npc : creator.getNpcs()){
+            npc.draw(game.batch);
         }
 
         game.batch.end();

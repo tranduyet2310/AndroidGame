@@ -151,7 +151,7 @@ public class Shark extends Enemy {
                 if (sharkAttack.isAnimationFinished(stateTimer)) {
                     isAttacking = false;
                     isJumping = true;
-                    velocity.y = 0.2f;
+//                    velocity.y = 0.2f;
                     Gdx.app.log("Shark", "inSharkAttack");
                 }
                 break;
@@ -159,7 +159,7 @@ public class Shark extends Enemy {
                 region = sharkJump.getKeyFrame(stateTimer);
                 if (sharkJump.isAnimationFinished(stateTimer)) {
                     isJumping = false;
-                    velocity.y = 0.0f;
+//                    velocity.y = 0.0f;
                     Gdx.app.log("Shark", "inSharkJump");
                 }
                 break;

@@ -10,6 +10,7 @@ import com.mygdx.game.Constants;
 import com.mygdx.game.Sprites.Enemies.Crabby;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.Item;
+import com.mygdx.game.Sprites.NPC.NPC;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Sprites.Sword.SwordAttack;
 import com.mygdx.game.Sprites.TileObjects.InteractiveTileObject;
@@ -188,6 +189,14 @@ public class WorldContactListener implements ContactListener {
                 } else {
                     ((Enemy) fixB.getUserData()).getSworkAttack();
                     ((SwordAttack) fixA.getUserData()).setToDestroy();
+                }
+                break;
+            // Collision between player and NPC
+            case Constants.PLAYER_BIT | Constants.NPC_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.NPC_BIT)
+                    ((NPC) fixA.getUserData()).checkRequest((Player) fixB.getUserData());
+                else {
+                    ((NPC) fixB.getUserData()).checkRequest((Player) fixA.getUserData());
                 }
                 break;
         }

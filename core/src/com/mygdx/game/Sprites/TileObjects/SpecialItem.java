@@ -32,6 +32,8 @@ public class SpecialItem extends InteractiveTileObject {
     public void onHeadHit() {
         Gdx.app.log("SpecialItem", "Collision");
         setCategoryFilter(Constants.COLLECTED_BIT);
+        getCell().setTile(null);
+
         if (object.getProperties().containsKey("gold_coin")) {
             screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), GoldCoin.class));
         } else if (object.getProperties().containsKey("silver_coin")) {
@@ -61,7 +63,6 @@ public class SpecialItem extends InteractiveTileObject {
         }else if (object.getProperties().containsKey("chest_key")) {
             screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), ChestKey.class));
         }
-        getCell().setTile(null);
     }
 
     @Override

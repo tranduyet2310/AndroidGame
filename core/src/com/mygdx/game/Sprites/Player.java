@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Sword.SwordAttack;
-import com.mygdx.game.StateManager;
 import com.mygdx.game.Tools.Utils;
 
 public class Player extends Sprite {
@@ -34,10 +33,8 @@ public class Player extends Sprite {
     private int maxHealth, currentHealth, powerAttack, maxMana, currentMana;
     private float timeToRegenerateMana;
     private boolean runningRight;
-    public boolean isAttacking;
-    public boolean isAirAttack;
-    private boolean takeDamage;
-    private boolean isDead;
+    public boolean isAttacking, isDead, isAirAttack, takeDamage;
+    private boolean hasBlueDiamond, hasSilverCoin, hasGoldCoin, hasGoldenSkull, hasRedDiamond;
     private Array<SwordAttack> swordAttacks;
     private Array<TextureRegion> frames;
 
@@ -53,6 +50,7 @@ public class Player extends Sprite {
         isAirAttack = false;
         takeDamage = false;
         isDead = false;
+        hasBlueDiamond = hasRedDiamond = hasGoldenSkull = hasGoldCoin = hasSilverCoin = false;
         //
         setPosition(x, y);
         // define Player animation
@@ -261,6 +259,56 @@ public class Player extends Sprite {
 
     public int getCurrentMana() {
         return currentMana;
+    }
+
+    public boolean isHasBlueDiamond() {
+        return hasBlueDiamond;
+    }
+
+    public void setHasBlueDiamond(boolean hasBlueDiamond) {
+        this.hasBlueDiamond = hasBlueDiamond;
+    }
+
+    public boolean isHasSilverCoin() {
+        return hasSilverCoin;
+    }
+
+    public void setHasSilverCoin(boolean hasSilverCoin) {
+        this.hasSilverCoin = hasSilverCoin;
+    }
+
+    public boolean isHasGoldCoin() {
+        return hasGoldCoin;
+    }
+
+    public void setHasGoldCoin(boolean hasGoldCoin) {
+        this.hasGoldCoin = hasGoldCoin;
+    }
+
+    public boolean isHasGoldenSkull() {
+        return hasGoldenSkull;
+    }
+
+    public void setHasGoldenSkull(boolean hasGoldenSkull) {
+        this.hasGoldenSkull = hasGoldenSkull;
+    }
+
+    public boolean isHasRedDiamond() {
+        return hasRedDiamond;
+    }
+
+    public void setHasRedDiamond(boolean hasRedDiamond) {
+        this.hasRedDiamond = hasRedDiamond;
+    }
+
+    public void addBlood(int blood) {
+        currentHealth += blood;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+    }
+
+    public void addMana(int mana) {
+        currentMana += mana;
+        if (currentMana > maxMana) currentMana = maxMana;
     }
 
     public void attack() {

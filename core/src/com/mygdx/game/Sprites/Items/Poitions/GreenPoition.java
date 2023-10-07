@@ -61,6 +61,8 @@ public class GreenPoition extends Item {
 
     @Override
     public void use(Player player) {
+        player.addBlood(75);
+        player.addMana(75);
         destroy();
     }
 }

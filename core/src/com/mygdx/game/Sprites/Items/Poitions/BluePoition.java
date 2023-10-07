@@ -61,6 +61,7 @@ public class BluePoition extends Item {
 
     @Override
     public void use(Player player) {
+        player.addMana(30);
         destroy();
     }
 }
