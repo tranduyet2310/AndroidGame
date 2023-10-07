@@ -2,6 +2,7 @@ package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,11 +15,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
+
+import java.util.HashMap;
 
 public class StatisticScreen implements Screen {
     private Viewport viewport;
@@ -31,6 +36,8 @@ public class StatisticScreen implements Screen {
     private TextButton backButton;
     private Label landLabel, mapLabel, map1Label, map2Label, map3Label, map4Label, map5Label;
     private Label highestScoreLabel, score1, score2, score3, score4, score5;
+    private int time1, time2, time3, time4, time5;
+    private Preferences prefs;
 
     public StatisticScreen(final MyGdxGame game) {
         this.game = game;
@@ -96,6 +103,15 @@ public class StatisticScreen implements Screen {
         music = audioManager.getMusic(Constants.MUSIC_MENU);
         music.setLooping(true);
         music.setVolume(MyGdxGame.MUSIC_VOLUME);
+
+        prefs = Gdx.app.getPreferences("mygdxgame");
+
+    }
+
+    public void convertToTime(int value, Label label) {
+        int minutes = value / 60;
+        int seconds = value % 60;
+        label.setText(String.format("%02d:%02d", minutes, seconds));
     }
 
     @Override
@@ -103,6 +119,17 @@ public class StatisticScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         if (MyGdxGame.IS_MUSIC_ENABLED)
             music.play();
+        Array<Integer> scores = new Array<>();
+        for (int i = 1; i <= 5; i++) {
+            String label = "score" + i;
+            scores.add(prefs.getInteger(label), 0);
+            Gdx.app.log("Hud", "in Preferences -label:" + label + "-value:" + scores.get(i - 1));
+        }
+        convertToTime(scores.get(0), score1);
+        convertToTime(scores.get(1), score2);
+        convertToTime(scores.get(2), score3);
+        convertToTime(scores.get(3), score4);
+        convertToTime(scores.get(4), score5);
     }
 
     @Override

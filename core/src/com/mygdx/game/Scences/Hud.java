@@ -72,19 +72,6 @@ public class Hud implements Disposable {
         timeCount += dt;
         if (timeCount >= 1) {
             if (worldTimer > 0) worldTimer--;
-
-            if (Utils.isCompleteRequest()) {
-                Preferences prefs = Gdx.app.getPreferences("mygdxgame");
-                HashMap<Integer, Integer> data = new HashMap<>();
-                data.put(level, worldTimer);
-
-                Json json = new Json();
-                String jsonData = json.toJson(data);
-
-                prefs.putString("score", jsonData);
-                prefs.flush();
-            }
-
             minutes = worldTimer / 60;
             seconds = worldTimer % 60;
             if (worldTimer == 0) {
@@ -99,5 +86,9 @@ public class Hud implements Disposable {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    public Integer getWorldTimer() {
+        return worldTimer;
     }
 }

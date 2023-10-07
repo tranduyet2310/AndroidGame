@@ -2,6 +2,7 @@ package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -329,12 +330,22 @@ public class PlayScreen implements Screen {
         healthPowerBar.stage.act();
         healthPowerBar.stage.draw();
         //
-        if (gameOver()) {
+        if (gameOver() || (hud.getWorldTimer() == 0)) {
             this.dispose();
             game.setScreen(new GameOverScreen(game));
             return;
         }
         if (isLevelCompleted()) {
+            Preferences prefs = Gdx.app.getPreferences("mygdxgame");
+            String scoreLabel = "score" + currentLevel;
+            int currentScore = 300 - hud.getWorldTimer();
+            int highScore = prefs.getInteger(scoreLabel, 300);
+            if (currentScore < highScore) {
+                prefs.putInteger(scoreLabel, currentScore);
+                prefs.flush();
+            }
+            Gdx.app.log("Hud", "in Preferences -label:" + scoreLabel + "-value:" + currentScore);
+
             Utils.resetFlag(currentLevel);
             Utils.setLevel(++currentLevel);
             this.dispose();
