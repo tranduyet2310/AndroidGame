@@ -15,7 +15,7 @@ public class MapManager {
     }
 
     public TiledMap getMap() {
-        int level = game.getLevel();
+        int level = Utils.getLevel();
         switch (level) {
             case 1:
                 map = mapLoader.load("map1.tmx");

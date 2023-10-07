@@ -26,38 +26,19 @@ public class MenuScreen implements Screen {
     private Viewport viewport;
     public Stage stage;
     private Texture bg_menu;
-    private Sprite sprite;
-    private SpriteBatch batch;
     private Music music;
     private AudioManager audioManager;
 
-    public MenuScreen(MyGdxGame game) {
+    public MenuScreen(final MyGdxGame game) {
         this.game = game;
         viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
 
         bg_menu = new Texture(Gdx.files.internal("resource/bg_menu.png"));
-        sprite = new Sprite(bg_menu);
-        sprite.setPosition(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM);
-        batch = new SpriteBatch();
-
-        audioManager = AudioManager.getInstance();
-        music = audioManager.getMusic(Constants.MUSIC_MENU);
-        music.setLooping(true);
-        music.setVolume(MyGdxGame.MUSIC_VOLUME);
-    }
-
-
-    @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
-
-        if (MyGdxGame.IS_MUSIC_ENABLED)
-            music.play();
 
         Table table = new Table();
         table.setFillParent(true);
-        table.setDebug(true);
+//        table.setDebug(true);
         stage.addActor(table);
 
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
@@ -102,6 +83,19 @@ public class MenuScreen implements Screen {
                 game.changeScreen(Constants.STATISTIC);
             }
         });
+
+        audioManager = AudioManager.getInstance();
+        music = audioManager.getMusic(Constants.MUSIC_MENU);
+        music.setLooping(true);
+        music.setVolume(MyGdxGame.MUSIC_VOLUME);
+    }
+
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+        if (MyGdxGame.IS_MUSIC_ENABLED)
+            music.play();
     }
 
     @Override
@@ -109,9 +103,9 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
-        sprite.draw(batch);
-        batch.end();
+        game.batch.begin();
+        game.batch.draw(bg_menu, Constants.V_WIDTH / 2.0f - bg_menu.getWidth() / 2.0f, Constants.V_HEIGHT / 2.0f - bg_menu.getHeight() / 2.0f, bg_menu.getWidth(), bg_menu.getHeight());
+        game.batch.end();
 
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / (30 * 1.0f)));
         stage.draw();
@@ -119,7 +113,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-       viewport.update(width, height, true);
+        viewport.update(width, height, true);
     }
 
     @Override
@@ -141,7 +135,6 @@ public class MenuScreen implements Screen {
     public void dispose() {
         System.out.println("MenuScreen dispose()");
         stage.dispose();
-        batch.dispose();
         bg_menu.dispose();
         music.dispose();
     }

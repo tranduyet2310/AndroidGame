@@ -21,6 +21,7 @@ public class BluePoition extends Item {
 
     public BluePoition(PlayScreen screen, float x, float y) {
         super(screen, x, y);
+        setBounds(getX(), getY(), 13 / Constants.PPM, 17 / Constants.PPM);
         frames = new Array<TextureRegion>();
         for (int i = 1; i <= 7; i++) {
             frames.add(new TextureRegion(Utils.getRegion("item/Potions/Blue Potion/0" + i + ".png")));

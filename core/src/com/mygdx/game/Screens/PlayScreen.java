@@ -66,7 +66,6 @@ public class PlayScreen implements Screen {
     //    Character
     private Player player;
     private boolean hasJupmed = false;
-    private boolean playSoundOnceTime = false;
     private HealthPowerBar healthPowerBar;
     //    Calculate map
     private TiledMapTileLayer mapTileLayer;
@@ -96,7 +95,7 @@ public class PlayScreen implements Screen {
 //        mapLoader = new TmxMapLoader();
 //        map = mapLoader.load("map1.tmx");
 
-        currentLevel = game.getLevel();
+        currentLevel = Utils.getLevel();
         MapManager mapManager = new MapManager(game);
         map = mapManager.getMap();
         //
@@ -222,16 +221,17 @@ public class PlayScreen implements Screen {
             } else player.isAttacking = false;
             // player dead
             if (player.getState() == Player.State.DEAD) {
-                if (!playSoundOnceTime) {
-                    sound = audioManager.getSound(Constants.SOUND_DIE);
-                    long idSound = sound.play(0.5f);
-                    sound.setLooping(idSound, false);
-                    playSoundOnceTime = true;
-                }
+                sound = audioManager.getSound(Constants.SOUND_DIE);
+                long idSound = sound.play(0.5f);
+                sound.setLooping(idSound, false);
             }
             //
-            if (Gdx.input.isKeyJustPressed(Input.Keys.B))
+            if (Gdx.input.isKeyJustPressed(Input.Keys.B)) {
                 player.attack();
+                sound = audioManager.getSound(Constants.SOUND_ATTACK3);
+                long idSound = sound.play(0.5f);
+                sound.setLooping(idSound, false);
+            }
         }
     }
 
@@ -259,7 +259,7 @@ public class PlayScreen implements Screen {
             item.update(dt);
         }
 
-        for (NPC npc : creator.getNpcs()){
+        for (NPC npc : creator.getNpcs()) {
             npc.update(dt);
         }
 
@@ -315,7 +315,7 @@ public class PlayScreen implements Screen {
             item.draw(game.batch);
         }
 
-        for (NPC npc : creator.getNpcs()){
+        for (NPC npc : creator.getNpcs()) {
             npc.draw(game.batch);
         }
 
@@ -330,14 +330,15 @@ public class PlayScreen implements Screen {
         healthPowerBar.stage.draw();
         //
         if (gameOver()) {
+            this.dispose();
             game.setScreen(new GameOverScreen(game));
-            dispose();
+            return;
         }
-        if (isLevelCompleted()){
+        if (isLevelCompleted()) {
             Utils.resetFlag(currentLevel);
-            game.setLevel(++currentLevel);
+            Utils.setLevel(++currentLevel);
+            this.dispose();
             game.setScreen(new LevelCompletedScreen(game));
-            dispose();
         }
     }
 
@@ -345,7 +346,7 @@ public class PlayScreen implements Screen {
         return player.currentState == Player.State.DEAD && player.getStateTimer() > 3;
     }
 
-    public boolean isLevelCompleted(){
+    public boolean isLevelCompleted() {
         return Utils.isCompleteRequest();
     }
 

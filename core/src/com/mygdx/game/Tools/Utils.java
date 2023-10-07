@@ -8,6 +8,7 @@ public class Utils {
     private static boolean playerOnWater;
     private static boolean completeRequest;
     private static boolean isMap1, isMap2, isMap3, isMap4, isMap5;
+    private static int level;
 
     public static TextureRegion getRegion(String path) {
         return new TextureRegion(new Texture(Gdx.files.internal(path)));
@@ -87,5 +88,14 @@ public class Utils {
                 setIsMap5(false);
                 break;
         }
+    }
+
+    public static int getLevel() {
+        return level;
+    }
+
+    public static void setLevel(int level) {
+        Utils.level = level;
+        if (level > 5) Utils.level = 5;
     }
 }

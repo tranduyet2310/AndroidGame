@@ -3,6 +3,8 @@ package com.mygdx.game.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -11,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
 
@@ -19,7 +22,8 @@ public class LevelCompletedScreen implements Screen {
     private Stage stage;
     private Game game;
     private Skin skin;
-
+    private Sound sound;
+    private AudioManager audioManager;
     public LevelCompletedScreen(Game game) {
         this.game = game;
         viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT, new OrthographicCamera());
@@ -39,8 +43,12 @@ public class LevelCompletedScreen implements Screen {
         table.row();
         table.add(playAgainLabel).expandX().padTop(10f);
 
-
         stage.addActor(table);
+
+        audioManager = AudioManager.getInstance();
+        sound = audioManager.getSound(Constants.SOUND_LVLCOMPLETED);
+        long idSound = sound.play(MyGdxGame.MUSIC_VOLUME);
+        sound.setLooping(idSound, true);
     }
 
     @Override
@@ -83,5 +91,7 @@ public class LevelCompletedScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        sound.stop();
+        sound.dispose();
     }
 }

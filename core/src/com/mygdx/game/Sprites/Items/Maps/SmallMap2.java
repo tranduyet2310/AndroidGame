@@ -1,5 +1,6 @@
 package com.mygdx.game.Sprites.Items.Maps;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -61,6 +62,7 @@ public class SmallMap2 extends Item {
 
     @Override
     public void use(Player player) {
+        Gdx.app.log("Small Map2", "in use()");
         destroy();
     }
 }

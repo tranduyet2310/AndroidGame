@@ -3,12 +3,15 @@ package com.mygdx.game.Sprites.NPC;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Sprites.Items.ItemDef;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap1;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.Utils;
 
@@ -59,8 +62,8 @@ public class BombGuy extends NPC {
     @Override
     public void checkRequest(Player player) {
         if (player.isHasSilverCoin()) {
-            Utils.setCompleteRequest(true);
             player.setHasSilverCoin(false);
+            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SmallMap1.class));
             destroy();
         }
     }

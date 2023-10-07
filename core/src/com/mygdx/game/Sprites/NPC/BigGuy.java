@@ -12,7 +12,7 @@ import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.Utils;
 
-public class BigGuy extends NPC{
+public class BigGuy extends NPC {
     private Animation<TextureRegion> bigGuyAnimation;
     private Array<TextureRegion> frames;
     private float stateTimer;
@@ -32,7 +32,7 @@ public class BigGuy extends NPC{
     @Override
     public void defineNPC() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(getX(), getY());
+        bodyDef.position.set(getX(), getY() + 34 / Constants.PPM);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
 

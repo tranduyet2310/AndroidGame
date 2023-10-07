@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
@@ -55,7 +56,7 @@ public class MapScreen implements Screen, InputProcessor {
         // Create cam used to follow player through cam world
         gameCam = new OrthographicCamera();
         // Create a FitViewport to maintain virtual aspect ratio despite screen size
-        gamePort = new FillViewport(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM, gameCam);
+        gamePort = new FitViewport(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM, gameCam);
         // Load our map and setup our map renderer
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("world_map.tmx");
