@@ -63,6 +63,5 @@ public class BombGuy extends NPC {
             player.setHasSilverCoin(false);
             destroy();
         }
-        Gdx.app.log("checkRequest", "value:"+player.isHasSilverCoin());
     }
 }

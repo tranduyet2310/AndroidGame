@@ -19,10 +19,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
+import com.mygdx.game.MapManager;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Scences.ConfirmDialog;
 import com.mygdx.game.Scences.Hud;
-import com.mygdx.game.Scences.LifeBar;
+import com.mygdx.game.Scences.HealthPowerBar;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.ChestKey;
 import com.mygdx.game.Sprites.Items.Maps.BigMap;
@@ -66,7 +67,7 @@ public class PlayScreen implements Screen {
     private Player player;
     private boolean hasJupmed = false;
     private boolean playSoundOnceTime = false;
-    private LifeBar lifeBar;
+    private HealthPowerBar healthPowerBar;
     //    Calculate map
     private TiledMapTileLayer mapTileLayer;
     private float evalHeight, evalWidth, totalMapWidth;
@@ -79,6 +80,7 @@ public class PlayScreen implements Screen {
     private Array<Item> items;
     private LinkedBlockingDeque<ItemDef> itemsToSpawn;
     private Array<Enemy> enemies;
+    private int currentLevel;
 
     public PlayScreen(MyGdxGame game) {
 //        atlas = new TextureAtlas("player.atlas");
@@ -91,8 +93,13 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch);
         confirmDialog = new ConfirmDialog(game.batch, game);
         // Load our map and setup our map renderer
-        mapLoader = new TmxMapLoader();
-        map = mapLoader.load("map1.tmx");
+//        mapLoader = new TmxMapLoader();
+//        map = mapLoader.load("map1.tmx");
+
+        currentLevel = game.getLevel();
+        MapManager mapManager = new MapManager(game);
+        map = mapManager.getMap();
+        //
         mapTileLayer = (TiledMapTileLayer) map.getLayers().get(1);
         renderer = new OrthogonalTiledMapRenderer(map, 1 / Constants.PPM);
 
@@ -127,12 +134,11 @@ public class PlayScreen implements Screen {
         items = new Array<Item>();
         itemsToSpawn = new LinkedBlockingDeque<ItemDef>();
         //
-        lifeBar = new LifeBar(game.batch, player);
+        healthPowerBar = new HealthPowerBar(game.batch, player);
         enemies = creator.getEnemies();
         // inital default value for flag
         Utils.setPlayerOnWater(false);
         Utils.setCompleteRequest(false);
-        Utils.setIsMap1(true);
     }
 
     public void spwanItem(ItemDef idef) {
@@ -259,7 +265,7 @@ public class PlayScreen implements Screen {
 
         hud.update(dt);
         confirmDialog.update(dt);
-        lifeBar.update(dt);
+        healthPowerBar.update(dt);
 
         // attach our gamecam to our player.x and player.y coordinate
 //        gameCam.position.x = player.b2Body.getPosition().x;
@@ -268,6 +274,7 @@ public class PlayScreen implements Screen {
             gameCam.position.x = player.b2Body.getPosition().x;
         else if (player.b2Body.getPosition().x >= totalMapWidth - gameCam.viewportWidth / 2 && player.b2Body.getPosition().x <= totalMapWidth) {
             // Out of the boundary
+            Gdx.app.log("PlayScreen", "Hold camera in tiledMap");
         }
         // update our gameCam with correct coordinates after changes
         gameCam.update();
@@ -319,17 +326,27 @@ public class PlayScreen implements Screen {
         hud.stage.draw();
         confirmDialog.stage.act();
         confirmDialog.stage.draw();
-        lifeBar.stage.act();
-        lifeBar.stage.draw();
+        healthPowerBar.stage.act();
+        healthPowerBar.stage.draw();
         //
         if (gameOver()) {
             game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
+        if (isLevelCompleted()){
+            Utils.resetFlag(currentLevel);
+            game.setLevel(++currentLevel);
+            game.setScreen(new LevelCompletedScreen(game));
             dispose();
         }
     }
 
     public boolean gameOver() {
         return player.currentState == Player.State.DEAD && player.getStateTimer() > 3;
+    }
+
+    public boolean isLevelCompleted(){
+        return Utils.isCompleteRequest();
     }
 
     @Override
@@ -370,7 +387,7 @@ public class PlayScreen implements Screen {
         hud.dispose();
         music.stop();
         confirmDialog.dispose();
-        lifeBar.dispose();
+        healthPowerBar.dispose();
 //        music.dispose();
 //        sound.dispose();
     }

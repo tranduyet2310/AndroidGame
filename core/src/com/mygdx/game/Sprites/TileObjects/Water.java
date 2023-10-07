@@ -5,7 +5,6 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.StateManager;
 import com.mygdx.game.Tools.Utils;
 
 public class Water extends InteractiveTileObject{

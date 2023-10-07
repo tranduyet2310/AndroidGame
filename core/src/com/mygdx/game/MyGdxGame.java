@@ -9,6 +9,7 @@ import com.mygdx.game.Screens.OptionScreen;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Screens.StatisticScreen;
 import com.mygdx.game.Screens.StorylineScreen;
+import com.mygdx.game.Tools.Utils;
 
 public class MyGdxGame extends Game {
     private MapScreen mapScreen;
@@ -24,6 +25,7 @@ public class MyGdxGame extends Game {
     public static Float MUSIC_VOLUME;
     public static boolean IS_MUSIC_ENABLED;
     public static boolean IS_SFX_ENABLED;
+    private int level;
 
     @Override
     public void create() {
@@ -36,6 +38,14 @@ public class MyGdxGame extends Game {
         audioManager = AudioManager.getInstance();
         audioManager.loadAssets();
         audioManager.finishLoading();
+        //
+        Utils.setIsMap1(true);
+        Utils.setIsMap2(false);
+        Utils.setIsMap3(false);
+        Utils.setIsMap4(false);
+        Utils.setIsMap5(false);
+
+        level = 1;
 
         setScreen(new MenuScreen(this));
     }
@@ -96,4 +106,12 @@ public class MyGdxGame extends Game {
         }
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+        if (level > 5) this.level = 5;
+    }
 }

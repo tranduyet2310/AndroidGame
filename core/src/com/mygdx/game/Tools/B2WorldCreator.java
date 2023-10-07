@@ -15,9 +15,11 @@ import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Enemies.Crabby;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Enemies.Shark;
+import com.mygdx.game.Sprites.NPC.BigGuy;
 import com.mygdx.game.Sprites.NPC.BombGuy;
 import com.mygdx.game.Sprites.NPC.NPC;
 import com.mygdx.game.Sprites.Player;
+import com.mygdx.game.Sprites.TileObjects.Ground;
 import com.mygdx.game.Sprites.TileObjects.MerchantShip;
 import com.mygdx.game.Sprites.TileObjects.SpecialItem;
 import com.mygdx.game.Sprites.TileObjects.Spike;
@@ -27,6 +29,11 @@ public class B2WorldCreator {
     private Array<Crabby> crabbies;
     private Array<Shark> sharks;
     private Array<NPC> npcs;
+    private Array<Ground> grounds;
+    private Array<Water> waters;
+    private Array<Spike> spikes;
+    private Array<SpecialItem> specialItems;
+    private Array<MerchantShip> merchantShips;
     private Player player;
 
     public B2WorldCreator(PlayScreen screen) {
@@ -38,35 +45,35 @@ public class B2WorldCreator {
         FixtureDef fdef = new FixtureDef();
         Body body;
 
-        npcs = new Array<NPC>();
-
         // Create ground bodies fixtures
+        grounds = new Array<Ground>();
         for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) / Constants.PPM, (rect.getY() + rect.getHeight() / 2) / Constants.PPM);
-            body = world.createBody(bdef);
-            shape.setAsBox(rect.getWidth() / 2 / Constants.PPM, rect.getHeight() / 2 / Constants.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
+            grounds.add(new Ground(screen, object));
         }
         // Create water bodies fixtures
+        waters = new Array<Water>();
         for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
-            new Water(screen, object);
+            waters.add(new Water(screen, object));
         }
         // Create spike boides fixture
+        spikes = new Array<Spike>();
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
-            new Spike(screen, object);
+            spikes.add(new Spike(screen, object));
         }
         // Create NPC boides fixture
+        npcs = new Array<NPC>();
         for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            if (true)
+            if (Utils.isIsMap1()) {
                 npcs.add(new BombGuy(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+            } else if (Utils.isIsMap2()) {
+                npcs.add(new BigGuy(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+            }
         }
         // Create special item boides fixture
+        specialItems = new Array<SpecialItem>();
         for (MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
-            new SpecialItem(screen, object);
+            specialItems.add(new SpecialItem(screen, object));
         }
         // Create Crabby boides fixture
         crabbies = new Array<Crabby>();
@@ -83,8 +90,9 @@ public class B2WorldCreator {
 //            new SpecialItem(screen, object);
 //        }
         // Create merchant ship boides fixture
+        merchantShips = new Array<MerchantShip>();
         for (MapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
-            new MerchantShip(screen, object);
+            merchantShips.add(new MerchantShip(screen, object));
         }
         // Create player boides fixture
         for (MapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
@@ -112,6 +120,26 @@ public class B2WorldCreator {
         enemies.addAll(sharks);
         enemies.addAll(crabbies);
         return enemies;
+    }
+
+    public Array<Ground> getGrounds() {
+        return grounds;
+    }
+
+    public Array<Water> getWaters() {
+        return waters;
+    }
+
+    public Array<Spike> getSpikes() {
+        return spikes;
+    }
+
+    public Array<SpecialItem> getSpecialItems() {
+        return specialItems;
+    }
+
+    public Array<MerchantShip> getMerchantShips() {
+        return merchantShips;
     }
 
     public Array<NPC> getNpcs() {
