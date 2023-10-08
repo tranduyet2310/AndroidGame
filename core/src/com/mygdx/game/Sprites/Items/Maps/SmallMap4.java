@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Sprites.Items.Item;
+import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.Utils;
 
@@ -61,6 +62,7 @@ public class SmallMap4 extends Item {
 
     @Override
     public void use(Player player) {
+        screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), BigMap.class));
         destroy();
     }
 }

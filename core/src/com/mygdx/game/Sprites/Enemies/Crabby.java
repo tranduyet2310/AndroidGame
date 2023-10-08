@@ -169,13 +169,12 @@ public class Crabby extends Enemy {
 
     @Override
     public void getSworkAttack() {
-//        attack.setToDestroy();
         Gdx.app.log("Crabby", "currentHealt:" + currentHealth);
         if (currentHealth <= 0) {
             isDead = true;
             currentHealth = 0;
         } else {
-            currentHealth -= 15;
+            currentHealth -= Constants.SWORD_ATTACK;
             isHurting = true;
         }
     }

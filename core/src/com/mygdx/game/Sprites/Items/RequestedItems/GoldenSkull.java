@@ -60,6 +60,7 @@ public class GoldenSkull extends Item {
 
     @Override
     public void use(Player player) {
+        player.setHasGoldenSkull(true);
         destroy();
     }
 }

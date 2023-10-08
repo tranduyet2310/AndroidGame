@@ -12,12 +12,20 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Sprites.Enemies.BlueTotem;
 import com.mygdx.game.Sprites.Enemies.Crabby;
 import com.mygdx.game.Sprites.Enemies.Enemy;
+import com.mygdx.game.Sprites.Enemies.GreenTotem;
+import com.mygdx.game.Sprites.Enemies.PinkStar;
+import com.mygdx.game.Sprites.Enemies.RedTotem;
+import com.mygdx.game.Sprites.Enemies.Seashell;
 import com.mygdx.game.Sprites.Enemies.Shark;
+import com.mygdx.game.Sprites.NPC.BaldPirate;
 import com.mygdx.game.Sprites.NPC.BigGuy;
 import com.mygdx.game.Sprites.NPC.BombGuy;
+import com.mygdx.game.Sprites.NPC.Captain;
 import com.mygdx.game.Sprites.NPC.NPC;
+import com.mygdx.game.Sprites.NPC.Unknown;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Sprites.TileObjects.Ground;
 import com.mygdx.game.Sprites.TileObjects.MerchantShip;
@@ -34,6 +42,11 @@ public class B2WorldCreator {
     private Array<Spike> spikes;
     private Array<SpecialItem> specialItems;
     private Array<MerchantShip> merchantShips;
+    private Array<PinkStar> pinkStars;
+    private Array<RedTotem> redTotems;
+    private Array<GreenTotem> greenTotems;
+    private Array<BlueTotem> blueTotems;
+    private Array<Seashell> seashells;
     private Player player;
 
     public B2WorldCreator(PlayScreen screen) {
@@ -68,6 +81,12 @@ public class B2WorldCreator {
                 npcs.add(new BombGuy(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
             } else if (Utils.isIsMap2()) {
                 npcs.add(new BigGuy(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+            }else if (Utils.isIsMap3()) {
+                npcs.add(new BaldPirate(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+            }else if (Utils.isIsMap4()) {
+                npcs.add(new Captain(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+            }else if (Utils.isIsMap5()) {
+                npcs.add(new Unknown(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
             }
         }
         // Create special item boides fixture
@@ -81,14 +100,18 @@ public class B2WorldCreator {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             crabbies.add(new Crabby(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
         }
-//        // Create box boides fixture
-//        for (MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
-//            new SpecialItem(screen, object);
-//        }
-//        // Create barrel boides fixture
-//        for (MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
-//            new SpecialItem(screen, object);
-//        }
+        // Create PinkStar boides fixture
+        pinkStars = new Array<PinkStar>();
+        for (MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            pinkStars.add(new PinkStar(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+        }
+        // Create RedTotem boides fixture
+        redTotems = new Array<RedTotem>();
+        for (MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            redTotems.add(new RedTotem(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+        }
         // Create merchant ship boides fixture
         merchantShips = new Array<MerchantShip>();
         for (MapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
@@ -105,6 +128,24 @@ public class B2WorldCreator {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             sharks.add(new Shark(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
         }
+        // Create GreenTotem boides fixture
+        greenTotems = new Array<GreenTotem>();
+        for (MapObject object : map.getLayers().get(13).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            greenTotems.add(new GreenTotem(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+        }
+        // Create BlueTotem boides fixture
+        blueTotems = new Array<BlueTotem>();
+        for (MapObject object : map.getLayers().get(14).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            blueTotems.add(new BlueTotem(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+        }
+        // Create Seashell boides fixture
+        seashells = new Array<Seashell>();
+        for (MapObject object : map.getLayers().get(15).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            seashells.add(new Seashell(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+        }
     }
 
     public Array<Crabby> getCrabbies() {
@@ -119,6 +160,11 @@ public class B2WorldCreator {
         Array<Enemy> enemies = new Array<Enemy>();
         enemies.addAll(sharks);
         enemies.addAll(crabbies);
+        enemies.addAll(pinkStars);
+        enemies.addAll(blueTotems);
+        enemies.addAll(greenTotems);
+        enemies.addAll(redTotems);
+        enemies.addAll(seashells);
         return enemies;
     }
 

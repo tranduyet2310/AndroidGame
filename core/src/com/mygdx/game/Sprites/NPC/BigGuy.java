@@ -3,12 +3,16 @@ package com.mygdx.game.Sprites.NPC;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Sprites.Items.ItemDef;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap1;
+import com.mygdx.game.Sprites.Items.Maps.SmallMap2;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.Utils;
 
@@ -32,7 +36,7 @@ public class BigGuy extends NPC {
     @Override
     public void defineNPC() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(getX(), getY() + 34 / Constants.PPM);
+        bodyDef.position.set(getX(), getY());
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bodyDef);
 
@@ -53,14 +57,14 @@ public class BigGuy extends NPC {
         stateTimer += dt;
         region = bigGuyAnimation.getKeyFrame(stateTimer, true);
         setRegion(region);
-        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
+        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2 + 12/Constants.PPM);
     }
 
     @Override
     public void checkRequest(Player player) {
         if (player.isHasGoldCoin()) {
-            Utils.setCompleteRequest(true);
             player.setHasGoldCoin(false);
+            screen.spwanItem(new ItemDef(new Vector2(body.getPosition().x, body.getPosition().y + 16 / Constants.PPM), SmallMap2.class));
             destroy();
         }
     }

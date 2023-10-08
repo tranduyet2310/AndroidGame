@@ -46,10 +46,13 @@ public class Constants {
     public static final int CRABBY_MAXHEALTH = 50;
     public static final int SHARK_MAXHEALTH = 75;
     public static final int STAR_MAXHEALTH = 75;
+    public static final int SEASHELL_MAXHEALTH = 125;
     public static final int CRABBY_ATTACK = 15;
     public static final int SHARK_ATTACK = 25;
     public static final int STAR_ATTACK = 20;
+    public static final int SEASHELL_ATTACK = 30;
     public static final int PLAYER_ATTACK = 25;
+    public static final int SWORD_ATTACK = 15;
     // Music + Sounds
     public static final String MUSIC_LEVEL1 = "audio/level1.wav";
     public static final String MUSIC_LEVEL2 = "audio/level2.wav";

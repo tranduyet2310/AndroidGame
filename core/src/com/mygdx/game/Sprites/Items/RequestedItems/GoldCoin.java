@@ -61,6 +61,7 @@ public class GoldCoin extends Item {
 
     @Override
     public void use(Player player) {
+        player.setHasGoldCoin(true);
         destroy();
     }
 

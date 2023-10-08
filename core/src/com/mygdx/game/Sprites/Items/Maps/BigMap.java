@@ -61,6 +61,7 @@ public class BigMap extends Item {
 
     @Override
     public void use(Player player) {
+        Utils.setCompleteRequest(true);
         destroy();
     }
 }

@@ -78,20 +78,18 @@ public class Shark extends Enemy {
 
     @Override
     public void getSworkAttack() {
-//        attack.setToDestroy();
         if (currentHealth <= 0) {
             isDead = true;
             currentHealth = 0;
             Gdx.app.log("Shark", "DEAD");
         } else {
-            currentHealth -= 15;
+            currentHealth -= Constants.SWORD_ATTACK;
             isHurting = true;
         }
     }
 
     @Override
     public void update(float dt) {
-
         if (setToDestroy && !destroyed) {
             world.destroyBody(b2body);
             destroyed = true;
@@ -150,16 +148,12 @@ public class Shark extends Enemy {
                 region = sharkAttack.getKeyFrame(stateTimer);
                 if (sharkAttack.isAnimationFinished(stateTimer)) {
                     isAttacking = false;
-                    isJumping = true;
-//                    velocity.y = 0.2f;
                     Gdx.app.log("Shark", "inSharkAttack");
                 }
                 break;
             case JUMP:
                 region = sharkJump.getKeyFrame(stateTimer);
                 if (sharkJump.isAnimationFinished(stateTimer)) {
-                    isJumping = false;
-//                    velocity.y = 0.0f;
                     Gdx.app.log("Shark", "inSharkJump");
                 }
                 break;

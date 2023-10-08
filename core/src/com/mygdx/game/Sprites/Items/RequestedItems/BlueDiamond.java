@@ -61,6 +61,7 @@ public class BlueDiamond extends Item {
 
     @Override
     public void use(Player player) {
+        player.setHasBlueDiamond(true);
         destroy();
     }
 }

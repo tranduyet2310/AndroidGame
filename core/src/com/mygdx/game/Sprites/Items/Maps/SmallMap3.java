@@ -61,6 +61,7 @@ public class SmallMap3 extends Item {
 
     @Override
     public void use(Player player) {
+        Utils.setCompleteRequest(true);
         destroy();
     }
 }

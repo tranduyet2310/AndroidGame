@@ -62,7 +62,7 @@ public class SmallMap2 extends Item {
 
     @Override
     public void use(Player player) {
-        Gdx.app.log("Small Map2", "in use()");
+        Utils.setCompleteRequest(true);
         destroy();
     }
 }
