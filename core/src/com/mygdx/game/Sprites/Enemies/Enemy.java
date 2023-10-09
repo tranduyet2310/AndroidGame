@@ -14,24 +14,29 @@ public abstract class Enemy extends Sprite {
     public Body b2body;
     public Vector2 velocity;
 
-    public Enemy(PlayScreen screen, float x, float y){
+    public Enemy(PlayScreen screen, float x, float y) {
         this.world = screen.getWorld();
         this.screen = screen;
         setPosition(x, y);
         defineEnemy();
-        velocity = new Vector2(0.5f,0);
+        velocity = new Vector2(0.5f, 0);
         b2body.setActive(false);
     }
 
     protected abstract void defineEnemy();
+
     public abstract void getsHurt();
+
     public abstract void getSworkAttack();
+
     public abstract void update(float dt);
+
     public abstract boolean isDestroyed();
-    public void reverseVelocity(boolean x, boolean y){
-        if(x)
+
+    public void reverseVelocity(boolean x, boolean y) {
+        if (x)
             velocity.x = -velocity.x;
-        if(y)
+        if (y)
             velocity.y = -velocity.y;
     }
 

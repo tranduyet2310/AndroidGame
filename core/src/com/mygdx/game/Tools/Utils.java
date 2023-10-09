@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Utils {
     private static boolean playerOnWater;
+    private static boolean playerHasKey;
     private static boolean completeRequest;
     private static boolean isMap1, isMap2, isMap3, isMap4, isMap5;
     private static int level;
@@ -20,6 +21,14 @@ public class Utils {
 
     public static void setPlayerOnWater(boolean playerOnWater) {
         Utils.playerOnWater = playerOnWater;
+    }
+
+    public static boolean isPlayerHasKey() {
+        return playerHasKey;
+    }
+
+    public static void setPlayerHasKey(boolean playerHasKey) {
+        Utils.playerHasKey = playerHasKey;
     }
 
     public static boolean isCompleteRequest() {
@@ -96,6 +105,5 @@ public class Utils {
 
     public static void setLevel(int level) {
         Utils.level = level;
-        if (level > 5) Utils.level = 5;
     }
 }

@@ -37,11 +37,6 @@ public class MyGdxGame extends Game {
         audioManager.loadAssets();
         audioManager.finishLoading();
         //
-        Utils.setIsMap1(true);
-        Utils.setIsMap2(false);
-        Utils.setIsMap3(false);
-        Utils.setIsMap4(false);
-        Utils.setIsMap5(false);
         Utils.setLevel(1);
 
         setScreen(new MenuScreen(this));

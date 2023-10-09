@@ -16,15 +16,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Tools.Utils;
 
 public class LevelCompletedScreen implements Screen {
     private Viewport viewport;
     private Stage stage;
-    private Game game;
+    private MyGdxGame game;
     private Skin skin;
     private Sound sound;
     private AudioManager audioManager;
-    public LevelCompletedScreen(Game game) {
+
+    public LevelCompletedScreen(MyGdxGame game) {
         this.game = game;
         viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, ((MyGdxGame) game).batch);
@@ -49,6 +51,11 @@ public class LevelCompletedScreen implements Screen {
         sound = audioManager.getSound(Constants.SOUND_LVLCOMPLETED);
         long idSound = sound.play(MyGdxGame.MUSIC_VOLUME);
         sound.setLooping(idSound, true);
+
+        if (Utils.getLevel() > 5) {
+            playAgainLabel.setText("You have explored the land successfully!!!\n\n\t   The next land is: ASTARTE");
+        }
+        Gdx.app.log("lv", "v0="+Utils.getLevel());
     }
 
     @Override
@@ -59,8 +66,17 @@ public class LevelCompletedScreen implements Screen {
     @Override
     public void render(float delta) {
         if (Gdx.input.justTouched()) {
-            game.setScreen(new PlayScreen((MyGdxGame) game));
-            dispose();
+            if (Utils.getLevel() > 5) {
+                Utils.setLevel(5);
+                game.changeScreen(Constants.MAP);
+                dispose();
+                Gdx.app.log("lv", "v1="+Utils.getLevel());
+            } else {
+                Gdx.app.log("lv", "v2="+Utils.getLevel());
+                game.setScreen(new PlayScreen(game));
+                dispose();
+            }
+
         }
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

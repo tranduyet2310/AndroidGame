@@ -60,6 +60,8 @@ public class ChestKey extends Item {
 
     @Override
     public void use(Player player) {
+        player.setHasChestKey(true);
+        Utils.setPlayerHasKey(true);
         destroy();
     }
 }

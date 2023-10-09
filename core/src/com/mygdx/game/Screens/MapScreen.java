@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -33,6 +34,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.AudioManager;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Tools.Utils;
 
 public class MapScreen implements Screen, InputProcessor {
     private MyGdxGame game;
@@ -43,15 +45,15 @@ public class MapScreen implements Screen, InputProcessor {
     private OrthogonalTiledMapRenderer renderer;
     private World world;
     private Box2DDebugRenderer b2dr;
-    private Rectangle rectLustel, rectRodaphite, rectTarish, rectTuran, rectAstarte;
-    private Stage stage;
+    private Rectangle rectLustel, rectRodaphite, rectTarish, rectTuran, rectAstarte, rectBackButton;
+    private Stage stage, backStage;
     private Dialog dialog;
     InputMultiplexer inputMultiplexer;
     private static boolean hasClicked = false;
     private Music music;
     private AudioManager audioManager;
 
-    public MapScreen(MyGdxGame game) {
+    public MapScreen(final MyGdxGame game) {
         this.game = game;
         // Create cam used to follow player through cam world
         gameCam = new OrthographicCamera();
@@ -67,11 +69,109 @@ public class MapScreen implements Screen, InputProcessor {
         world = new World(new Vector2(0, -10), true);
         b2dr = new Box2DDebugRenderer();
 
+        initBody();
+
+        inputMultiplexer = new InputMultiplexer();
+        stage = new Stage();
+        backStage = new Stage();
+
+        Table table = new Table();
+        table.setFillParent(true);
+        table.top().right();
+
+        Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        dialog = new Dialog("Notify", skin);
+        Label label = new Label("The land has not been unlocked yet!", skin, "title");
+        Label back = new Label("Back", skin, "title");
+        TextButton button = new TextButton("Close", skin, "round");
+
+        dialog.text(label);
+        dialog.button(button, true);
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hasClicked = false;
+                dialog.hide();
+            }
+        });
+        dialog.show(stage);
+
+        table.add(back).pad(15f, 0, 0, 55f);
+
+        stage.addActor(dialog);
+        backStage.addActor(table);
+
+        audioManager = AudioManager.getInstance();
+        music = audioManager.getMusic(Constants.MUSIC_LEVEL1);
+        music.setLooping(true);
+        music.setVolume(MyGdxGame.MUSIC_VOLUME);
+    }
+
+    @Override
+    public void show() {
+        if (MyGdxGame.IS_MUSIC_ENABLED)
+            music.play();
+
+        inputMultiplexer.addProcessor(MapScreen.this);
+        inputMultiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
+
+    }
+
+    @Override
+    public void render(float delta) {
+        // Renders all the layers of the map
+        renderer.setView(gameCam);
+        renderer.render();
+        // Renderer our Box2DDebugLines
+        b2dr.render(world, gameCam.combined);
+        // Render dialog
+        if (hasClicked) {
+            System.out.println("In render()");
+            stage.act();
+            stage.draw();
+        }
+        backStage.draw();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        gamePort.update(width, height);
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+        music.stop();
+    }
+
+    @Override
+    public void dispose() {
+        System.out.println("MapScreen dispose()");
+        map.dispose();
+        renderer.dispose();
+        world.dispose();
+        b2dr.dispose();
+        stage.dispose();
+        backStage.dispose();
+//        music.stop();
+        music.dispose();
+    }
+
+    private void initBody() {
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
         FixtureDef fdef = new FixtureDef();
         Body body;
-
         // Create Lustel bodies fixtures
         for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
             rectLustel = ((RectangleMapObject) object).getRectangle();
@@ -123,87 +223,16 @@ public class MapScreen implements Screen, InputProcessor {
             fdef.shape = shape;
             body.createFixture(fdef);
         }
-
-        inputMultiplexer = new InputMultiplexer();
-        stage = new Stage();
-
-        audioManager = AudioManager.getInstance();
-        music = audioManager.getMusic(Constants.MUSIC_LEVEL1);
-        music.setLooping(true);
-        music.setVolume(MyGdxGame.MUSIC_VOLUME);
-    }
-
-    @Override
-    public void show() {
-        if (MyGdxGame.IS_MUSIC_ENABLED)
-            music.play();
-
-        inputMultiplexer.addProcessor(MapScreen.this);
-        inputMultiplexer.addProcessor(stage);
-        Gdx.input.setInputProcessor(inputMultiplexer);
-
-        Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        dialog = new Dialog("Notify", skin);
-        Label label = new Label("The land has not been unlocked yet!", skin, "title");
-        TextButton button = new TextButton("Close", skin, "round");
-        dialog.text(label);
-        dialog.button(button, true);
-        button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                hasClicked = false;
-                dialog.hide();
-            }
-        });
-        dialog.show(stage);
-        stage.addActor(dialog);
-    }
-
-    @Override
-    public void render(float delta) {
-        // Renders all the layers of the map
-        renderer.setView(gameCam);
-        renderer.render();
-        // Renderer our Box2DDebugLines
-        b2dr.render(world, gameCam.combined);
-        // Render dialog
-        if (hasClicked) {
-            System.out.println("In render()");
-            stage.act();
-            stage.draw();
+        // Create BackButton bodies fixtures
+        for (MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
+            rectBackButton = ((RectangleMapObject) object).getRectangle();
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set((rectBackButton.getX() + rectBackButton.getWidth() / 2) / Constants.PPM, (rectBackButton.getY() + rectBackButton.getHeight() / 2) / Constants.PPM);
+            body = world.createBody(bdef);
+            shape.setAsBox(rectBackButton.getWidth() / 2 / Constants.PPM, rectBackButton.getHeight() / 2 / Constants.PPM);
+            fdef.shape = shape;
+            body.createFixture(fdef);
         }
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        gamePort.update(width, height);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-        music.stop();
-    }
-
-    @Override
-    public void dispose() {
-        System.out.println("MapScreen dispose()");
-        map.dispose();
-        renderer.dispose();
-        world.dispose();
-        b2dr.dispose();
-        stage.dispose();
-//        music.stop();
-        music.dispose();
     }
 
     public void comparePosition(Rectangle rect, Vector3 touchPoint) {
@@ -211,11 +240,17 @@ public class MapScreen implements Screen, InputProcessor {
         float y = rect.getY() / Constants.PPM;
         float w = rect.getWidth() / Constants.PPM;
         float h = rect.getHeight() / Constants.PPM;
-
-        if ((touchPoint.x >= x) && (touchPoint.x <= x + w) && ((touchPoint.y >= y) && (touchPoint.y) <= y + h)) {
-            hasClicked = true;
-            dialog.show(stage);
+        if (rect == rectBackButton) {
+            if ((touchPoint.x >= x) && (touchPoint.x <= x + w) && ((touchPoint.y >= y) && (touchPoint.y) <= y + h)) {
+                game.changeScreen(Constants.MENU);
+            }
+        } else {
+            if ((touchPoint.x >= x) && (touchPoint.x <= x + w) && ((touchPoint.y >= y) && (touchPoint.y) <= y + h)) {
+                hasClicked = true;
+                dialog.show(stage);
+            }
         }
+
     }
 
     @Override
@@ -243,12 +278,14 @@ public class MapScreen implements Screen, InputProcessor {
         float h = rectLustel.getHeight() / Constants.PPM;
 
         if ((touchPoint.x >= x) && (touchPoint.x <= x + w) && ((touchPoint.y >= y) && (touchPoint.y) <= y + h)) {
-            game.changeScreen(Constants.PLAY);
+            if(Utils.getLevel() == 5) game.setScreen(new PlayScreen(game));
+            else game.changeScreen(Constants.PLAY);
         } else {
             comparePosition(rectRodaphite, touchPoint);
             comparePosition(rectTarish, touchPoint);
             comparePosition(rectTuran, touchPoint);
             comparePosition(rectAstarte, touchPoint);
+            comparePosition(rectBackButton, touchPoint);
         }
         System.out.println("Clicked! x=" + touchPoint.x + " y=" + touchPoint.y);
         return false;

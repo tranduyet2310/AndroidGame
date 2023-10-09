@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="40" height="24" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="9">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="40" height="24" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="10">
  <tileset firstgid="1" source="resource/world_map.tsx"/>
  <layer id="1" name="WorldMap" width="40" height="24">
   <data encoding="csv">
@@ -43,5 +43,8 @@
  </objectgroup>
  <objectgroup id="6" name="Astarte">
   <object id="8" x="100" y="446" width="230" height="70"/>
+ </objectgroup>
+ <objectgroup id="8" name="BackButton">
+  <object id="9" x="1143.67" y="21.1667" width="80.5" height="50"/>
  </objectgroup>
 </map>

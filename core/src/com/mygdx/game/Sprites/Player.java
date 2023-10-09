@@ -34,7 +34,7 @@ public class Player extends Sprite {
     private float timeToRegenerateMana;
     private boolean runningRight;
     public boolean isAttacking, isDead, isAirAttack, takeDamage;
-    private boolean hasBlueDiamond, hasSilverCoin, hasGoldCoin, hasGoldenSkull, hasRedDiamond;
+    private boolean hasBlueDiamond, hasSilverCoin, hasGoldCoin, hasGoldenSkull, hasRedDiamond, hasChestKey;
     private Array<SwordAttack> swordAttacks;
     private Array<TextureRegion> frames;
 
@@ -299,6 +299,14 @@ public class Player extends Sprite {
 
     public void setHasRedDiamond(boolean hasRedDiamond) {
         this.hasRedDiamond = hasRedDiamond;
+    }
+
+    public boolean isHasChestKey() {
+        return hasChestKey;
+    }
+
+    public void setHasChestKey(boolean hasChestKey) {
+        this.hasChestKey = hasChestKey;
     }
 
     public void addBlood(int blood) {

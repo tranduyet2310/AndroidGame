@@ -43,7 +43,7 @@ public class Hud implements Disposable {
 
         level = Utils.getLevel();
 
-        countdownLabel = new Label(String.format("%02d:%02d", minutes, seconds), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        countdownLabel = new Label("00:00", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         levelLabel = new Label("1-" + level, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         worldLabel = new Label("MAP", new Label.LabelStyle(new BitmapFont(), Color.WHITE));

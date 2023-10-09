@@ -37,8 +37,6 @@ public class MapManager {
                 map = mapLoader.load("map5.tmx");
                 Utils.setIsMap5(true);
                 break;
-            default:
-                break;
         }
         return map;
     }

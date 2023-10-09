@@ -47,6 +47,7 @@ public class WorldContactListener implements ContactListener {
                 break;
             // Collision between two enemies
             case Constants.ENEMY_BIT:
+                Gdx.app.log("check", "in here");
                 ((Enemy) fixA.getUserData()).reverseVelocity(true, false);
                 ((Enemy) fixB.getUserData()).reverseVelocity(true, false);
                 break;
@@ -88,6 +89,13 @@ public class WorldContactListener implements ContactListener {
                 break;
             case Constants.PLAYER_BIT | Constants.CHEST_KEY:
                 if (fixA.getFilterData().categoryBits == Constants.CHEST_KEY)
+                    ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
+                else {
+                    ((Item) fixB.getUserData()).use((Player) fixA.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.TREASURE_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.TREASURE_BIT)
                     ((Item) fixA.getUserData()).use((Player) fixB.getUserData());
                 else {
                     ((Item) fixB.getUserData()).use((Player) fixA.getUserData());

@@ -20,6 +20,7 @@ import com.mygdx.game.Sprites.Enemies.PinkStar;
 import com.mygdx.game.Sprites.Enemies.RedTotem;
 import com.mygdx.game.Sprites.Enemies.Seashell;
 import com.mygdx.game.Sprites.Enemies.Shark;
+import com.mygdx.game.Sprites.Items.Treasure;
 import com.mygdx.game.Sprites.NPC.BaldPirate;
 import com.mygdx.game.Sprites.NPC.BigGuy;
 import com.mygdx.game.Sprites.NPC.BombGuy;
@@ -47,6 +48,7 @@ public class B2WorldCreator {
     private Array<GreenTotem> greenTotems;
     private Array<BlueTotem> blueTotems;
     private Array<Seashell> seashells;
+    private Array<Treasure>  treasures;
     private Player player;
 
     public B2WorldCreator(PlayScreen screen) {
@@ -146,6 +148,12 @@ public class B2WorldCreator {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             seashells.add(new Seashell(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
         }
+        // Create Treasure boides fixture
+        treasures = new Array<Treasure>();
+        for (MapObject object : map.getLayers().get(16).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            treasures.add(new Treasure(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+        }
     }
 
     public Array<Crabby> getCrabbies() {
@@ -194,5 +202,9 @@ public class B2WorldCreator {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Array<Treasure> getTreasures() {
+        return treasures;
     }
 }

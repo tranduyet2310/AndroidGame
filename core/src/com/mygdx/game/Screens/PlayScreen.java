@@ -42,6 +42,7 @@ import com.mygdx.game.Sprites.Items.ItemDef;
 import com.mygdx.game.Sprites.Items.RequestedItems.GoldenSkull;
 import com.mygdx.game.Sprites.Items.RequestedItems.RedDiamond;
 import com.mygdx.game.Sprites.Items.RequestedItems.SilverCoin;
+import com.mygdx.game.Sprites.Items.Treasure;
 import com.mygdx.game.Sprites.NPC.NPC;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.B2WorldCreator;
@@ -264,6 +265,10 @@ public class PlayScreen implements Screen {
             npc.update(dt);
         }
 
+        for (Treasure treasure : creator.getTreasures()){
+            treasure.update(dt);
+        }
+
         hud.update(dt);
         confirmDialog.update(dt);
         healthPowerBar.update(dt);
@@ -318,6 +323,10 @@ public class PlayScreen implements Screen {
 
         for (NPC npc : creator.getNpcs()) {
             npc.draw(game.batch);
+        }
+
+        for (Treasure treasure : creator.getTreasures()){
+            treasure.draw(game.batch);
         }
 
         game.batch.end();

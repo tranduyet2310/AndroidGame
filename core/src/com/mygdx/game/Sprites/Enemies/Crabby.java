@@ -141,8 +141,7 @@ public class Crabby extends Enemy {
         CircleShape shape = new CircleShape();
         shape.setRadius(12 / Constants.PPM);
         fixtureDef.filter.categoryBits = Constants.ENEMY_BIT;
-        fixtureDef.filter.maskBits = Constants.GROUND_BIT |
-                Constants.GOLD_COIN_BIT | Constants.SILVER_COIN_BIT
+        fixtureDef.filter.maskBits = Constants.GROUND_BIT | Constants.WATER_BIT | Constants.SWORD_BIT
                 | Constants.SPIKE_BIT | Constants.ENEMY_BIT | Constants.PLAYER_BIT | Constants.SWORD_ATTACK_BIT;
 
         fixtureDef.shape = shape;
