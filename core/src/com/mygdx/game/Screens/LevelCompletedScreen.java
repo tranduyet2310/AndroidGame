@@ -25,6 +25,7 @@ public class LevelCompletedScreen implements Screen {
     private Skin skin;
     private Sound sound;
     private AudioManager audioManager;
+    private Utils utils;
 
     public LevelCompletedScreen(MyGdxGame game) {
         this.game = game;
@@ -52,10 +53,10 @@ public class LevelCompletedScreen implements Screen {
         long idSound = sound.play(MyGdxGame.MUSIC_VOLUME);
         sound.setLooping(idSound, true);
 
-        if (Utils.getLevel() > 5) {
+        utils = Utils.getInstance();
+        if (utils.getLevel() > 5) {
             playAgainLabel.setText("You have explored the land successfully!!!\n\n\t   The next land is: ASTARTE");
         }
-        Gdx.app.log("lv", "v0="+Utils.getLevel());
     }
 
     @Override
@@ -66,13 +67,11 @@ public class LevelCompletedScreen implements Screen {
     @Override
     public void render(float delta) {
         if (Gdx.input.justTouched()) {
-            if (Utils.getLevel() > 5) {
-                Utils.setLevel(5);
+            if (utils.getLevel() > 5) {
+                utils.setLevel(5);
                 game.changeScreen(Constants.MAP);
                 dispose();
-                Gdx.app.log("lv", "v1="+Utils.getLevel());
             } else {
-                Gdx.app.log("lv", "v2="+Utils.getLevel());
                 game.setScreen(new PlayScreen(game));
                 dispose();
             }

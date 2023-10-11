@@ -62,7 +62,8 @@ public class SmallMap2 extends Item {
 
     @Override
     public void use(Player player) {
-        Utils.setCompleteRequest(true);
+        Utils utils = Utils.getInstance();
+        utils.setCompleteRequest(true);
         destroy();
     }
 }

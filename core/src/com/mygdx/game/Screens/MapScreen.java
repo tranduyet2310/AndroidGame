@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -46,15 +48,20 @@ public class MapScreen implements Screen, InputProcessor {
     private World world;
     private Box2DDebugRenderer b2dr;
     private Rectangle rectLustel, rectRodaphite, rectTarish, rectTuran, rectAstarte, rectBackButton;
-    private Stage stage, backStage;
-    private Dialog dialog;
+    private Stage stage, backStage, levelStage;
+    private Dialog dialog, levelDialog;
     InputMultiplexer inputMultiplexer;
-    private static boolean hasClicked = false;
+    private boolean hasClicked, hasTouched;
     private Music music;
     private AudioManager audioManager;
+    private Utils utils;
 
     public MapScreen(final MyGdxGame game) {
         this.game = game;
+        utils = Utils.getInstance();
+        hasClicked = false;
+        hasTouched = false;
+
         // Create cam used to follow player through cam world
         gameCam = new OrthographicCamera();
         // Create a FitViewport to maintain virtual aspect ratio despite screen size
@@ -74,6 +81,7 @@ public class MapScreen implements Screen, InputProcessor {
         inputMultiplexer = new InputMultiplexer();
         stage = new Stage();
         backStage = new Stage();
+        levelStage = new Stage();
 
         Table table = new Table();
         table.setFillParent(true);
@@ -95,11 +103,100 @@ public class MapScreen implements Screen, InputProcessor {
             }
         });
         dialog.show(stage);
-
         table.add(back).pad(15f, 0, 0, 55f);
+
+        levelDialog = new Dialog("", skin);
+        Texture background = new Texture(Gdx.files.internal("resource/bg_level.png"));
+        Image backgroundImage = new Image(background);
+        levelDialog.setBackground(backgroundImage.getDrawable());
+
+        Label levels = new Label("LEVELS", skin, "title");
+        Label lvMap1 = new Label("LEVEL 1", skin, "title");
+        Label lvMap2 = new Label("LEVEL 2", skin, "title");
+        Label lvMap3 = new Label("LEVEL 3", skin, "title");
+        Label lvMap4 = new Label("LEVEL 4", skin, "title");
+        Label lvMap5 = new Label("LEVEL 5", skin, "title");
+
+        TextButton btnMap1 = new TextButton("PLAY", skin);
+        TextButton btnMap2 = new TextButton("PLAY", skin);
+        TextButton btnMap3 = new TextButton("PLAY", skin);
+        TextButton btnMap4 = new TextButton("PLAY", skin);
+        TextButton btnMap5 = new TextButton("PLAY", skin);
+
+        TextButton btnCancle = new TextButton("CANCEL", skin, "round");
+
+        btnMap5.setDisabled(true);
+
+        Table contentTable = levelDialog.getContentTable();
+//        contentTable.setDebug(true);
+
+        contentTable.add(levels).colspan(2).padBottom(5f);
+        contentTable.row();
+        contentTable.add(lvMap1).padRight(10f);
+        contentTable.add(btnMap1).padLeft(10f);
+        contentTable.row();
+        contentTable.add(lvMap2).padRight(10f);
+        contentTable.add(btnMap2).padLeft(10f);
+        contentTable.row();
+        contentTable.add(lvMap3).padRight(10f);
+        contentTable.add(btnMap3).padLeft(10f);
+        contentTable.row();
+        contentTable.add(lvMap4).padRight(10f);
+        contentTable.add(btnMap4).padLeft(10f);
+        contentTable.row();
+        contentTable.add(lvMap5).padRight(10f);
+        contentTable.add(btnMap5).padLeft(10f);
+
+        levelDialog.getButtonTable().add(btnCancle);
+
+        levelDialog.setPosition((stage.getWidth() - levelDialog.getWidth()) / 2, (stage.getHeight() - levelDialog.getHeight()) / 2);
+
+        btnMap1.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                utils.setLevel(1);
+                game.setScreen(new PlayScreen(game));
+            }
+        });
+        btnMap2.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                utils.setLevel(2);
+                game.setScreen(new PlayScreen(game));
+            }
+        });
+        btnMap3.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                utils.setLevel(3);
+                game.setScreen(new PlayScreen(game));
+            }
+        });
+        btnMap4.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                utils.setLevel(4);
+                game.setScreen(new PlayScreen(game));
+            }
+        });
+        btnMap5.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                utils.setLevel(5);
+                game.setScreen(new PlayScreen(game));
+            }
+        });
+        btnCancle.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hasTouched = false;
+                levelDialog.hide();
+            }
+        });
 
         stage.addActor(dialog);
         backStage.addActor(table);
+        stage.addActor(levelDialog);
 
         audioManager = AudioManager.getInstance();
         music = audioManager.getMusic(Constants.MUSIC_LEVEL1);
@@ -126,8 +223,13 @@ public class MapScreen implements Screen, InputProcessor {
         // Renderer our Box2DDebugLines
         b2dr.render(world, gameCam.combined);
         // Render dialog
+        if(hasTouched){
+            dialog.hide();
+            stage.act();
+            stage.draw();
+        }
         if (hasClicked) {
-            System.out.println("In render()");
+            levelDialog.hide();
             stage.act();
             stage.draw();
         }
@@ -278,8 +380,10 @@ public class MapScreen implements Screen, InputProcessor {
         float h = rectLustel.getHeight() / Constants.PPM;
 
         if ((touchPoint.x >= x) && (touchPoint.x <= x + w) && ((touchPoint.y >= y) && (touchPoint.y) <= y + h)) {
-            if(Utils.getLevel() == 5) game.setScreen(new PlayScreen(game));
-            else game.changeScreen(Constants.PLAY);
+//            if (Utils.getLevel() == 5) game.setScreen(new PlayScreen(game));
+//            else game.changeScreen(Constants.PLAY);
+            hasTouched = true;
+            levelDialog.show(stage);
         } else {
             comparePosition(rectRodaphite, touchPoint);
             comparePosition(rectTarish, touchPoint);

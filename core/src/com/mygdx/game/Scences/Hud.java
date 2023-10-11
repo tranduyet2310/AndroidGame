@@ -25,6 +25,7 @@ public class Hud implements Disposable {
     private float timeCount;
     private int minutes, seconds, level;
     private Label countdownLabel, timeLabel, levelLabel, worldLabel, landLabel, processLabel;
+    private Utils utils;
 
     public Hud(SpriteBatch sb) {
         worldTimer = 300;
@@ -41,7 +42,8 @@ public class Hud implements Disposable {
         minutes = worldTimer / 60;
         seconds = worldTimer % 60;
 
-        level = Utils.getLevel();
+        utils = Utils.getInstance();
+        level = utils.getLevel();
 
         countdownLabel = new Label("00:00", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));

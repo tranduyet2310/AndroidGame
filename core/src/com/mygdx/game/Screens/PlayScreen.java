@@ -82,6 +82,7 @@ public class PlayScreen implements Screen {
     private LinkedBlockingDeque<ItemDef> itemsToSpawn;
     private Array<Enemy> enemies;
     private int currentLevel;
+    private Utils utils;
 
     public PlayScreen(MyGdxGame game) {
 //        atlas = new TextureAtlas("player.atlas");
@@ -97,7 +98,9 @@ public class PlayScreen implements Screen {
 //        mapLoader = new TmxMapLoader();
 //        map = mapLoader.load("map1.tmx");
 
-        currentLevel = Utils.getLevel();
+        utils = Utils.getInstance();
+
+        currentLevel = utils.getLevel();
         MapManager mapManager = new MapManager(game);
         map = mapManager.getMap();
         //
@@ -118,9 +121,7 @@ public class PlayScreen implements Screen {
         world.setContactListener(new WorldContactListener());
 
         audioManager = AudioManager.getInstance();
-        music = audioManager.getMusic(Constants.MUSIC_LEVEL2);
-        music.setLooping(true);
-        music.setVolume(MyGdxGame.MUSIC_VOLUME);
+        playMusic();
 
         // get the width and height of map
         int mapWidthInTiles = mapTileLayer.getWidth();
@@ -138,8 +139,31 @@ public class PlayScreen implements Screen {
         healthPowerBar = new HealthPowerBar(game.batch, player);
         enemies = creator.getEnemies();
         // inital default value for flag
-        Utils.setPlayerOnWater(false);
-        Utils.setCompleteRequest(false);
+        utils.setPlayerOnWater(false);
+        utils.setCompleteRequest(false);
+    }
+
+    private void playMusic() {
+        switch (currentLevel) {
+            case 1:
+            case 3:
+                music = audioManager.getMusic(Constants.MUSIC_LEVEL2);
+                music.setLooping(true);
+                music.setVolume(MyGdxGame.MUSIC_VOLUME);
+                break;
+            case 2:
+            case 4:
+                music = audioManager.getMusic(Constants.MUSIC_LEVEL1);
+                music.setLooping(true);
+                music.setVolume(MyGdxGame.MUSIC_VOLUME);
+                break;
+            case 5:
+                music = audioManager.getMusic(Constants.MUSIC_MENU);
+                music.setLooping(true);
+                music.setVolume(MyGdxGame.MUSIC_VOLUME);
+                break;
+        }
+
     }
 
     public void spwanItem(ItemDef idef) {
@@ -265,7 +289,7 @@ public class PlayScreen implements Screen {
             npc.update(dt);
         }
 
-        for (Treasure treasure : creator.getTreasures()){
+        for (Treasure treasure : creator.getTreasures()) {
             treasure.update(dt);
         }
 
@@ -325,7 +349,7 @@ public class PlayScreen implements Screen {
             npc.draw(game.batch);
         }
 
-        for (Treasure treasure : creator.getTreasures()){
+        for (Treasure treasure : creator.getTreasures()) {
             treasure.draw(game.batch);
         }
 
@@ -355,8 +379,8 @@ public class PlayScreen implements Screen {
             }
             Gdx.app.log("Hud", "in Preferences -label:" + scoreLabel + "-value:" + currentScore);
 
-            Utils.resetFlag(currentLevel);
-            Utils.setLevel(++currentLevel);
+            utils.resetFlag(currentLevel);
+            utils.setLevel(++currentLevel);
             this.dispose();
             game.setScreen(new LevelCompletedScreen(game));
         }
@@ -367,7 +391,7 @@ public class PlayScreen implements Screen {
     }
 
     public boolean isLevelCompleted() {
-        return Utils.isCompleteRequest();
+        return utils.isCompleteRequest();
     }
 
     @Override

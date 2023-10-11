@@ -17,7 +17,8 @@ public class Water extends InteractiveTileObject{
     @Override
     public void onHeadHit() {
         Gdx.app.log("Water", "Collision");
-        Utils.setPlayerOnWater(true);
+        Utils utils = Utils.getInstance();
+        utils.setPlayerOnWater(true);
     }
 
     @Override

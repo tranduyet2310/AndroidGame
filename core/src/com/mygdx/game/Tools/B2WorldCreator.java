@@ -50,10 +50,12 @@ public class B2WorldCreator {
     private Array<Seashell> seashells;
     private Array<Treasure>  treasures;
     private Player player;
+    private Utils utils;
 
     public B2WorldCreator(PlayScreen screen) {
         World world = screen.getWorld();
         TiledMap map = screen.getMap();
+        utils = Utils.getInstance();
         //
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
@@ -79,15 +81,15 @@ public class B2WorldCreator {
         npcs = new Array<NPC>();
         for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            if (Utils.isIsMap1()) {
+            if (utils.isIsMap1()) {
                 npcs.add(new BombGuy(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
-            } else if (Utils.isIsMap2()) {
+            } else if (utils.isIsMap2()) {
                 npcs.add(new BigGuy(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
-            }else if (Utils.isIsMap3()) {
+            }else if (utils.isIsMap3()) {
                 npcs.add(new BaldPirate(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
-            }else if (Utils.isIsMap4()) {
+            }else if (utils.isIsMap4()) {
                 npcs.add(new Captain(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
-            }else if (Utils.isIsMap5()) {
+            }else if (utils.isIsMap5()) {
                 npcs.add(new Unknown(screen, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
             }
         }

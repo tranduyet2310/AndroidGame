@@ -37,6 +37,7 @@ public class Player extends Sprite {
     private boolean hasBlueDiamond, hasSilverCoin, hasGoldCoin, hasGoldenSkull, hasRedDiamond, hasChestKey;
     private Array<SwordAttack> swordAttacks;
     private Array<TextureRegion> frames;
+    private Utils utils;
 
     public Player(PlayScreen screen, float x, float y) {
         this.screen = screen;
@@ -70,6 +71,7 @@ public class Player extends Sprite {
         timeToRegenerateMana = 0;
         //
         swordAttacks = new Array<SwordAttack>();
+        utils = Utils.getInstance();
     }
 
     public void update(float dt) {
@@ -232,10 +234,10 @@ public class Player extends Sprite {
     public void checkCurrentHealth() {
         if (currentHealth == 0)
             isDead = true;
-        if (Utils.isPlayerOnWater()) {
+        if (utils.isPlayerOnWater()) {
             currentHealth -= maxHealth;
             isDead = true;
-            Utils.setPlayerOnWater(false);
+            utils.setPlayerOnWater(false);
         }
     }
 

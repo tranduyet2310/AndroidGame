@@ -74,7 +74,7 @@ public class ConfirmDialog implements Disposable {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 check = false;
-                game.changeScreen(Constants.MENU_DISPOSE);
+                game.changeScreen(Constants.MENU);
             }
         });
         btnReset.addListener(new ClickListener() {

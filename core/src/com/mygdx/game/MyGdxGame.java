@@ -25,6 +25,7 @@ public class MyGdxGame extends Game {
     public static Float MUSIC_VOLUME;
     public static boolean IS_MUSIC_ENABLED;
     public static boolean IS_SFX_ENABLED;
+
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -36,8 +37,10 @@ public class MyGdxGame extends Game {
         audioManager = AudioManager.getInstance();
         audioManager.loadAssets();
         audioManager.finishLoading();
-        //
-        Utils.setLevel(1);
+        // inital global value
+        Utils utils = Utils.getInstance();
+        utils.setPlayerOnWater(false);
+        utils.setLevel(1);
 
         setScreen(new MenuScreen(this));
     }
@@ -85,12 +88,12 @@ public class MyGdxGame extends Game {
                     menuScreen = new MenuScreen(this);
                 this.setScreen(menuScreen);
                 break;
-            case Constants.MENU_DISPOSE:
-                playScreen.pause();
-                if (menuScreen == null)
-                    menuScreen = new MenuScreen(this);
-                this.setScreen(menuScreen);
-                break;
+//            case Constants.MENU_DISPOSE:
+//                playScreen.pause();
+//                if (menuScreen == null)
+//                    menuScreen = new MenuScreen(this);
+//                this.setScreen(menuScreen);
+//                break;
             case Constants.PLAY_DISPOSE:
                 playScreen = new PlayScreen(this);
                 this.setScreen(playScreen);

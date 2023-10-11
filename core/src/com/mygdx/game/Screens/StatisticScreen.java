@@ -122,7 +122,7 @@ public class StatisticScreen implements Screen {
         Array<Integer> scores = new Array<>();
         for (int i = 1; i <= 5; i++) {
             String label = "score" + i;
-            scores.add(prefs.getInteger(label), 0);
+            scores.add(prefs.getInteger(label));
             Gdx.app.log("Hud", "in Preferences -label:" + label + "-value:" + scores.get(i - 1));
         }
         convertToTime(scores.get(0), score1);

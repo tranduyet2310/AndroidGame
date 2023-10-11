@@ -22,7 +22,7 @@ public class Treasure extends Item {
     private float stateTimer;
     private Animation<TextureRegion> treasureCloseAnimation, treasureOpenAnimation;
     private Array<TextureRegion> frames;
-    private TextureRegion region;
+    private Utils utils;
 
     public Treasure(PlayScreen screen, float x, float y) {
         super(screen, x, y);
@@ -42,6 +42,7 @@ public class Treasure extends Item {
 
         stateTimer = 0;
         velocity = new Vector2(0, 0);
+        utils = Utils.getInstance();
     }
 
     @Override
@@ -53,7 +54,7 @@ public class Treasure extends Item {
     }
 
     public TreasureState getState() {
-        if (Utils.isPlayerHasKey()) {
+        if (utils.isPlayerHasKey()) {
             return TreasureState.OPEN;
         } else return TreasureState.CLOSE;
     }
@@ -98,8 +99,8 @@ public class Treasure extends Item {
     public void use(Player player) {
         if (player.isHasChestKey()) {
             player.setHasChestKey(false);
-            Utils.setPlayerHasKey(false);
-            Utils.setCompleteRequest(true);
+            utils.setPlayerHasKey(false);
+            utils.setCompleteRequest(true);
         }
     }
 }

@@ -5,81 +5,93 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Utils {
-    private static boolean playerOnWater;
-    private static boolean playerHasKey;
-    private static boolean completeRequest;
-    private static boolean isMap1, isMap2, isMap3, isMap4, isMap5;
-    private static int level;
+    private static Utils instance;
+
+    private Utils() {
+    }
+
+    public static Utils getInstance() {
+        if (instance == null) {
+            instance = new Utils();
+        }
+        return instance;
+    }
+
+    private boolean playerOnWater;
+    private boolean playerHasKey;
+    private boolean completeRequest;
+    private boolean isMap1, isMap2, isMap3, isMap4, isMap5;
+    private int level;
 
     public static TextureRegion getRegion(String path) {
         return new TextureRegion(new Texture(Gdx.files.internal(path)));
     }
 
-    public static boolean isPlayerOnWater() {
+    public boolean isPlayerOnWater() {
         return playerOnWater;
     }
 
-    public static void setPlayerOnWater(boolean playerOnWater) {
-        Utils.playerOnWater = playerOnWater;
+    public void setPlayerOnWater(boolean playerOnWater) {
+        this.playerOnWater = playerOnWater;
     }
 
-    public static boolean isPlayerHasKey() {
+    public boolean isPlayerHasKey() {
         return playerHasKey;
     }
 
-    public static void setPlayerHasKey(boolean playerHasKey) {
-        Utils.playerHasKey = playerHasKey;
+    public void setPlayerHasKey(boolean playerHasKey) {
+        this.playerHasKey = playerHasKey;
     }
 
-    public static boolean isCompleteRequest() {
+    public boolean isCompleteRequest() {
         return completeRequest;
     }
 
-    public static void setCompleteRequest(boolean completeRequest) {
-        Utils.completeRequest = completeRequest;
+    public void setCompleteRequest(boolean completeRequest) {
+        this.completeRequest = completeRequest;
     }
 
-    public static boolean isIsMap1() {
+    public boolean isIsMap1() {
         return isMap1;
     }
 
-    public static void setIsMap1(boolean isMap1) {
-        Utils.isMap1 = isMap1;
+    public void setIsMap1(boolean isMap1) {
+        this.isMap1 = isMap1;
     }
 
-    public static boolean isIsMap2() {
+    public boolean isIsMap2() {
         return isMap2;
     }
 
-    public static void setIsMap2(boolean isMap2) {
-        Utils.isMap2 = isMap2;
+    public void setIsMap2(boolean isMap2) {
+        this.isMap2 = isMap2;
     }
 
-    public static boolean isIsMap3() {
+    public boolean isIsMap3() {
         return isMap3;
     }
 
-    public static void setIsMap3(boolean isMap3) {
-        Utils.isMap3 = isMap3;
+    public void setIsMap3(boolean isMap3) {
+        this.isMap3 = isMap3;
     }
 
-    public static boolean isIsMap4() {
+    public boolean isIsMap4() {
         return isMap4;
     }
 
-    public static void setIsMap4(boolean isMap4) {
-        Utils.isMap4 = isMap4;
+    public void setIsMap4(boolean isMap4) {
+        this.isMap4 = isMap4;
     }
 
-    public static boolean isIsMap5() {
+    public boolean isIsMap5() {
         return isMap5;
     }
 
-    public static void setIsMap5(boolean isMap5) {
-        Utils.isMap5 = isMap5;
+    public void setIsMap5(boolean isMap5) {
+        this.isMap5 = isMap5;
     }
 
-    public static void resetFlag(int level) {
+    public void resetFlag(int level) {
         switch (level) {
             case 1:
                 setIsMap1(false);
@@ -99,11 +111,11 @@ public class Utils {
         }
     }
 
-    public static int getLevel() {
+    public int getLevel() {
         return level;
     }
 
-    public static void setLevel(int level) {
-        Utils.level = level;
+    public void setLevel(int level) {
+        this.level = level;
     }
 }
