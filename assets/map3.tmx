@@ -175,32 +175,32 @@
   <object id="86" x="64.1667" y="511" width="32.5" height="32.5"/>
  </objectgroup>
  <objectgroup id="7" name="Special_Item">
-  <object id="91" x="3008.36" y="301.455" width="25.4545" height="18.3636">
+  <object id="91" x="3009.86" y="301.455" width="22.9545" height="18.3636">
    <properties>
     <property name="red_potion" value=""/>
    </properties>
   </object>
-  <object id="92" x="2623.45" y="419.818" width="24.9091" height="27.0909">
+  <object id="92" x="2625.45" y="419.818" width="21.9091" height="27.0909">
    <properties>
     <property name="green_poition" value=""/>
    </properties>
   </object>
-  <object id="93" x="1920.27" y="269.273" width="25.5455" height="18.8182">
+  <object id="93" x="1921.27" y="269.273" width="23.5455" height="18.8182">
    <properties>
     <property name="red_potion" value=""/>
    </properties>
   </object>
-  <object id="94" x="1503.82" y="269.273" width="26.5455" height="18.5455">
+  <object id="94" x="1505.82" y="269.273" width="23.7955" height="18.5455">
    <properties>
     <property name="blue_poition" value=""/>
    </properties>
   </object>
-  <object id="95" x="1184" y="163.625" width="24.5" height="26.875">
+  <object id="95" x="1184" y="163.625" width="23" height="26.875">
    <properties>
     <property name="green_poition" value=""/>
    </properties>
   </object>
-  <object id="96" x="896.545" y="492.182" width="25.4545" height="19.4545">
+  <object id="96" x="896.545" y="492.182" width="24.7045" height="19.4545">
    <properties>
     <property name="red_potion" value=""/>
    </properties>
@@ -210,24 +210,24 @@
     <property name="blue_poition" value=""/>
    </properties>
   </object>
-  <object id="98" x="929" y="259.25" width="25" height="28.25">
+  <object id="98" x="928.75" y="259.25" width="23.5" height="28.25">
    <properties>
     <property name="green_poition" value=""/>
    </properties>
   </object>
-  <object id="99" x="639.455" y="484.182" width="25.8182" height="26.3636">
+  <object id="99" x="640.705" y="484.182" width="22.3182" height="26.3636">
    <properties>
     <property name="blue_poition" value=""/>
    </properties>
   </object>
-  <object id="101" x="64.5" y="365" width="25.5" height="19">
+  <object id="101" x="65.25" y="365" width="25" height="19">
    <properties>
     <property name="blue_poition" value=""/>
    </properties>
   </object>
   <object id="103" x="3135.63" y="95.75" width="32.125" height="32.375">
    <properties>
-    <property name="small_map3" value="   "/>
+    <property name="golden_skull" value="   "/>
    </properties>
   </object>
   <object id="104" x="287.818" y="447.636" width="32" height="32.3636">

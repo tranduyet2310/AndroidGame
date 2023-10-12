@@ -2,6 +2,7 @@ package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -25,6 +26,7 @@ import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Scences.ConfirmDialog;
 import com.mygdx.game.Scences.Hud;
 import com.mygdx.game.Scences.HealthPowerBar;
+import com.mygdx.game.Scences.Keyboard;
 import com.mygdx.game.Sprites.Enemies.Enemy;
 import com.mygdx.game.Sprites.Items.ChestKey;
 import com.mygdx.game.Sprites.Items.Maps.BigMap;
@@ -57,6 +59,7 @@ public class PlayScreen implements Screen {
     private Viewport gamePort;
     private Hud hud;
     private ConfirmDialog confirmDialog;
+    private Keyboard keyboard;
     //    Tiled map variables
     private TmxMapLoader mapLoader;
     private TiledMap map;
@@ -83,6 +86,7 @@ public class PlayScreen implements Screen {
     private Array<Enemy> enemies;
     private int currentLevel;
     private Utils utils;
+    private InputMultiplexer inputMultiplexer;
 
     public PlayScreen(MyGdxGame game) {
 //        atlas = new TextureAtlas("player.atlas");
@@ -93,7 +97,7 @@ public class PlayScreen implements Screen {
         gamePort = new FitViewport(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM, gameCam);
         // Create our game HUD for timer/level info
         hud = new Hud(game.batch);
-        confirmDialog = new ConfirmDialog(game.batch, game);
+        confirmDialog = new ConfirmDialog(game.batch, game, PlayScreen.this);
         // Load our map and setup our map renderer
 //        mapLoader = new TmxMapLoader();
 //        map = mapLoader.load("map1.tmx");
@@ -141,6 +145,9 @@ public class PlayScreen implements Screen {
         // inital default value for flag
         utils.setPlayerOnWater(false);
         utils.setCompleteRequest(false);
+        //
+        keyboard = new Keyboard(game.batch, player);
+        inputMultiplexer = new InputMultiplexer();
     }
 
     private void playMusic() {
@@ -296,6 +303,7 @@ public class PlayScreen implements Screen {
         hud.update(dt);
         confirmDialog.update(dt);
         healthPowerBar.update(dt);
+        keyboard.update(dt);
 
         // attach our gamecam to our player.x and player.y coordinate
 //        gameCam.position.x = player.b2Body.getPosition().x;
@@ -316,6 +324,9 @@ public class PlayScreen implements Screen {
     public void show() {
         if (MyGdxGame.IS_MUSIC_ENABLED)
             music.play();
+        inputMultiplexer.addProcessor(keyboard.stage);
+        inputMultiplexer.addProcessor(confirmDialog.stage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
@@ -358,10 +369,12 @@ public class PlayScreen implements Screen {
         // Set our batch to now draw what the Hud camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
-        confirmDialog.stage.act();
-        confirmDialog.stage.draw();
         healthPowerBar.stage.act();
         healthPowerBar.stage.draw();
+        keyboard.stage.act();
+        keyboard.stage.draw();
+        confirmDialog.stage.act();
+        confirmDialog.stage.draw();
         //
         if (gameOver() || (hud.getWorldTimer() == 0)) {
             this.dispose();
@@ -370,9 +383,14 @@ public class PlayScreen implements Screen {
         }
         if (isLevelCompleted()) {
             Preferences prefs = Gdx.app.getPreferences("mygdxgame");
+
             String scoreLabel = "score" + currentLevel;
             int currentScore = 300 - hud.getWorldTimer();
             int highScore = prefs.getInteger(scoreLabel, 300);
+
+            prefs.putInteger("levelPassed", currentLevel);
+            prefs.flush();
+
             if (currentScore < highScore) {
                 prefs.putInteger(scoreLabel, currentScore);
                 prefs.flush();
@@ -433,7 +451,6 @@ public class PlayScreen implements Screen {
         music.stop();
         confirmDialog.dispose();
         healthPowerBar.dispose();
-//        music.dispose();
-//        sound.dispose();
+        keyboard.dispose();
     }
 }

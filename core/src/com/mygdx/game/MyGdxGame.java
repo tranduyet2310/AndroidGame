@@ -1,6 +1,8 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Screens.MapScreen;
@@ -37,10 +39,13 @@ public class MyGdxGame extends Game {
         audioManager = AudioManager.getInstance();
         audioManager.loadAssets();
         audioManager.finishLoading();
+        //
+        Preferences prefs = Gdx.app.getPreferences("mygdxgame");
         // inital global value
         Utils utils = Utils.getInstance();
         utils.setPlayerOnWater(false);
         utils.setLevel(1);
+        utils.setLevelPassed(prefs.getInteger("levelPassed", 0));
 
         setScreen(new MenuScreen(this));
     }
@@ -88,12 +93,6 @@ public class MyGdxGame extends Game {
                     menuScreen = new MenuScreen(this);
                 this.setScreen(menuScreen);
                 break;
-//            case Constants.MENU_DISPOSE:
-//                playScreen.pause();
-//                if (menuScreen == null)
-//                    menuScreen = new MenuScreen(this);
-//                this.setScreen(menuScreen);
-//                break;
             case Constants.PLAY_DISPOSE:
                 playScreen = new PlayScreen(this);
                 this.setScreen(playScreen);

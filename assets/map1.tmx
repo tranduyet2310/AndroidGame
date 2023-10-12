@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="100" height="24" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="120">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="100" height="24" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="122">
  <tileset firstgid="1" source="resource/Terrain.tsx"/>
  <tileset firstgid="86" source="resource/water_atlas_animation.tsx"/>
  <tileset firstgid="87" source="resource/water.tsx"/>
@@ -167,19 +167,29 @@
     <property name="small_map1" value=""/>
    </properties>
   </object>
-  <object id="106" x="2176.5" y="228.375" width="23.875" height="26.625">
+  <object id="106" x="2175.92" y="228.375" width="23.3598" height="26.625">
    <properties>
     <property name="green_poition" value=""/>
    </properties>
   </object>
-  <object id="108" x="1024.25" y="451.75" width="24.75" height="27">
+  <object id="108" x="1025.25" y="451.75" width="22.4167" height="27">
    <properties>
     <property name="blue_poition" value=""/>
    </properties>
   </object>
-  <object id="109" x="2784.7" y="205.758" width="25.5909" height="19">
+  <object id="109" x="2784.76" y="205.758" width="25.5909" height="19">
    <properties>
     <property name="red_potion" value=""/>
+   </properties>
+  </object>
+  <object id="120" x="2209.12" y="517.333" width="21.1818" height="24">
+   <properties>
+    <property name="green_poition" value=" "/>
+   </properties>
+  </object>
+  <object id="121" x="2625.64" y="526.545" width="24.3636" height="16.5455">
+   <properties>
+    <property name="green_poition" value=""/>
    </properties>
   </object>
  </objectgroup>

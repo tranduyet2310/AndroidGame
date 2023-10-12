@@ -7,8 +7,14 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.Constants;
+import com.mygdx.game.Sprites.Enemies.BlueTotem;
 import com.mygdx.game.Sprites.Enemies.Crabby;
 import com.mygdx.game.Sprites.Enemies.Enemy;
+import com.mygdx.game.Sprites.Enemies.GreenTotem;
+import com.mygdx.game.Sprites.Enemies.PinkStar;
+import com.mygdx.game.Sprites.Enemies.RedTotem;
+import com.mygdx.game.Sprites.Enemies.Seashell;
+import com.mygdx.game.Sprites.Enemies.Shark;
 import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Sprites.NPC.NPC;
 import com.mygdx.game.Sprites.Player;
@@ -38,10 +44,34 @@ public class WorldContactListener implements ContactListener {
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
                     if (fixB.getUserData() instanceof Crabby) {
                         ((Player) fixA.getUserData()).getsHurt(Constants.CRABBY_ATTACK);
+                    } else if (fixB.getUserData() instanceof Shark) {
+                        ((Player) fixA.getUserData()).getsHurt(Constants.SHARK_ATTACK);
+                    } else if (fixB.getUserData() instanceof PinkStar) {
+                        ((Player) fixA.getUserData()).getsHurt(Constants.STAR_ATTACK);
+                    } else if (fixB.getUserData() instanceof Seashell) {
+                        ((Player) fixA.getUserData()).getsHurt(Constants.SEASHELL_ATTACK);
+                    } else if (fixB.getUserData() instanceof RedTotem) {
+                        ((Player) fixA.getUserData()).getsHurt(Constants.SHARK_ATTACK);
+                    } else if (fixB.getUserData() instanceof GreenTotem) {
+                        ((Player) fixA.getUserData()).getsHurt(Constants.SHARK_ATTACK);
+                    } else if (fixB.getUserData() instanceof BlueTotem) {
+                        ((Player) fixA.getUserData()).getsHurt(Constants.SEASHELL_ATTACK);
                     }
                 } else {
                     if (fixA.getUserData() instanceof Crabby) {
                         ((Player) fixB.getUserData()).getsHurt(Constants.CRABBY_ATTACK);
+                    } else if (fixA.getUserData() instanceof Shark) {
+                        ((Player) fixB.getUserData()).getsHurt(Constants.SHARK_ATTACK);
+                    } else if (fixA.getUserData() instanceof PinkStar) {
+                        ((Player) fixB.getUserData()).getsHurt(Constants.STAR_ATTACK);
+                    } else if (fixA.getUserData() instanceof Seashell) {
+                        ((Player) fixB.getUserData()).getsHurt(Constants.SEASHELL_ATTACK);
+                    } else if (fixA.getUserData() instanceof RedTotem) {
+                        ((Player) fixB.getUserData()).getsHurt(Constants.SHARK_ATTACK);
+                    } else if (fixA.getUserData() instanceof GreenTotem) {
+                        ((Player) fixB.getUserData()).getsHurt(Constants.SHARK_ATTACK);
+                    } else if (fixA.getUserData() instanceof BlueTotem) {
+                        ((Player) fixB.getUserData()).getsHurt(Constants.SEASHELL_ATTACK);
                     }
                 }
                 break;

@@ -231,7 +231,7 @@
   <object id="1" x="473.917" y="320.834" width="31.5" height="31.75"/>
  </objectgroup>
  <objectgroup id="7" name="Special_Item">
-  <object id="145" x="65" y="302" width="24.3333" height="17">
+  <object id="145" x="65.9091" y="302" width="23.4242" height="17">
    <properties>
     <property name="red_potion" value=""/>
    </properties>
@@ -241,77 +241,77 @@
     <property name="chest_key" value=""/>
    </properties>
   </object>
-  <object id="147" x="97" y="77.3333" width="24.6667" height="17.6667">
+  <object id="147" x="97.5453" y="77.3333" width="23.5758" height="17.6667">
    <properties>
     <property name="red_potion" value=""/>
    </properties>
   </object>
-  <object id="148" x="864" y="68.25" width="23.75" height="26.5">
+  <object id="148" x="865.818" y="68.25" width="20.8409" height="26.5">
    <properties>
     <property name="green_poition" value=""/>
    </properties>
   </object>
-  <object id="149" x="895.5" y="461.5" width="26.25" height="18.5">
+  <object id="149" x="898.227" y="461.5" width="22.6136" height="18.5">
    <properties>
     <property name="red_potion" value=""/>
    </properties>
   </object>
-  <object id="150" x="1056.36" y="45.4545" width="25.6364" height="18.5455">
+  <object id="150" x="1057.81" y="45.4545" width="23.6364" height="18.5455">
    <properties>
     <property name="red_potion" value=""/>
    </properties>
   </object>
-  <object id="151" x="1024" y="356" width="24" height="26">
+  <object id="151" x="1025.46" y="356" width="22.5455" height="26">
    <properties>
     <property name="blue_poition" value=""/>
    </properties>
   </object>
-  <object id="154" x="1408.25" y="589.25" width="26" height="18.25">
+  <object id="154" x="1409.52" y="589.25" width="23.6364" height="18.25">
    <properties>
     <property name="blue_poition" value=""/>
    </properties>
   </object>
-  <object id="155" x="1888" y="493.333" width="26.3333" height="19">
+  <object id="155" x="1889.45" y="493.333" width="23.9697" height="19">
    <properties>
     <property name="blue_poition" value=""/>
    </properties>
   </object>
-  <object id="156" x="2048" y="590" width="26" height="18.3333">
+  <object id="156" x="2050.18" y="590" width="22.9091" height="18.3333">
    <properties>
     <property name="red_potion" value=""/>
    </properties>
   </object>
-  <object id="157" x="2432.5" y="334" width="25.5" height="17.5">
+  <object id="157" x="2433.59" y="334" width="23.6818" height="17.5">
    <properties>
     <property name="green_poition" value=""/>
    </properties>
   </object>
-  <object id="159" x="2624" y="397.75" width="25.5" height="18">
+  <object id="159" x="2624" y="397.75" width="24.9545" height="18">
    <properties>
     <property name="blue_poition" value=""/>
    </properties>
   </object>
-  <object id="160" x="2720.5" y="451.75" width="23" height="26.75">
+  <object id="160" x="2731.37" y="452.25" width="20.4545" height="26.75">
    <properties>
     <property name="red_diamond" value=""/>
    </properties>
   </object>
-  <object id="161" x="2368" y="205.25" width="25.75" height="18.5">
+  <object id="161" x="2370.54" y="205.25" width="22.8409" height="18.5">
    <properties>
     <property name="blue_poition" value=""/>
    </properties>
   </object>
-  <object id="162" x="2432.75" y="78" width="25" height="18">
+  <object id="162" x="2434.75" y="78" width="23" height="18">
    <properties>
     <property name="green_poition" value=""/>
    </properties>
   </object>
-  <object id="163" x="2687.25" y="196" width="24.75" height="26.5">
+  <object id="163" x="2689.25" y="196" width="22.3864" height="26.5">
    <properties>
     <property name="red_potion" value=""/>
    </properties>
   </object>
-  <object id="197" x="1152.18" y="525.273" width="25.4545" height="18.1818">
+  <object id="197" x="1153.23" y="525.273" width="24.409" height="18.1818">
    <properties>
     <property name="blue_poition" value=""/>
    </properties>

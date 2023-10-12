@@ -125,8 +125,6 @@ public class MapScreen implements Screen, InputProcessor {
 
         TextButton btnCancle = new TextButton("CANCEL", skin, "round");
 
-        btnMap5.setDisabled(true);
-
         Table contentTable = levelDialog.getContentTable();
 //        contentTable.setDebug(true);
 
@@ -151,42 +149,51 @@ public class MapScreen implements Screen, InputProcessor {
 
         levelDialog.setPosition((stage.getWidth() - levelDialog.getWidth()) / 2, (stage.getHeight() - levelDialog.getHeight()) / 2);
 
-        btnMap1.addListener(new ClickListener(){
+        btnMap1.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 utils.setLevel(1);
-                game.setScreen(new PlayScreen(game));
+//                game.setScreen(new PlayScreen(game));
+                game.setScreen(new StorylineScreen(game));
             }
         });
-        btnMap2.addListener(new ClickListener(){
+        btnMap2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                utils.setLevel(2);
-                game.setScreen(new PlayScreen(game));
+                if (utils.getLevelPassed() >= 1) {
+                    utils.setLevel(2);
+                    game.setScreen(new StorylineScreen(game));
+                }
             }
         });
-        btnMap3.addListener(new ClickListener(){
+        btnMap3.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                utils.setLevel(3);
-                game.setScreen(new PlayScreen(game));
+                if (utils.getLevelPassed() >= 2) {
+                    utils.setLevel(3);
+                    game.setScreen(new StorylineScreen(game));
+                }
             }
         });
-        btnMap4.addListener(new ClickListener(){
+        btnMap4.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                utils.setLevel(4);
-                game.setScreen(new PlayScreen(game));
+                if(utils.getLevelPassed() >=3){
+                    utils.setLevel(4);
+                    game.setScreen(new StorylineScreen(game));
+                }
             }
         });
-        btnMap5.addListener(new ClickListener(){
+        btnMap5.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                utils.setLevel(5);
-                game.setScreen(new PlayScreen(game));
+                if(utils.getLevelPassed()>= 4){
+                    utils.setLevel(5);
+                    game.setScreen(new StorylineScreen(game));
+                }
             }
         });
-        btnCancle.addListener(new ClickListener(){
+        btnCancle.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hasTouched = false;
@@ -223,7 +230,7 @@ public class MapScreen implements Screen, InputProcessor {
         // Renderer our Box2DDebugLines
         b2dr.render(world, gameCam.combined);
         // Render dialog
-        if(hasTouched){
+        if (hasTouched) {
             dialog.hide();
             stage.act();
             stage.draw();

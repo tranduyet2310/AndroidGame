@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Constants;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.Screens.PlayScreen;
 
 public class ConfirmDialog implements Disposable {
     public Stage stage;
@@ -26,11 +27,14 @@ public class ConfirmDialog implements Disposable {
     TextButton btnHome, btnReset, btnContinue;
     Skin skin;
     private static boolean check = false;
+    private PlayScreen screen;
 
-    public ConfirmDialog(SpriteBatch sb, final MyGdxGame game) {
+    public ConfirmDialog(SpriteBatch sb, final MyGdxGame game, final PlayScreen screen) {
+        this.screen = screen;
         Gdx.app.log("ConfirmDialog", "onConstructor");
         Viewport viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
+        Gdx.input.setInputProcessor(stage);
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         Gdx.input.setInputProcessor(stage);
@@ -74,6 +78,7 @@ public class ConfirmDialog implements Disposable {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 check = false;
+                screen.pause();
                 game.changeScreen(Constants.MENU);
             }
         });

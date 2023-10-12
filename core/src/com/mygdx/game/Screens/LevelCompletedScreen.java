@@ -37,12 +37,12 @@ public class LevelCompletedScreen implements Screen {
         table.center();
         table.setFillParent(true);
 
-        Label gameOverLabel = new Label("LEVEL COMPLETED!!!", skin);
+        Label titleLabel = new Label("LEVEL COMPLETED!!!", skin);
         Label playAgainLabel = new Label("Click to next level", skin);
-        gameOverLabel.setFontScale(3.0f);
+        titleLabel.setFontScale(3.0f);
         playAgainLabel.setFontScale(2.0f);
 
-        table.add(gameOverLabel).expandX();
+        table.add(titleLabel).expandX();
         table.row();
         table.add(playAgainLabel).expandX().padTop(10f);
 
@@ -55,6 +55,7 @@ public class LevelCompletedScreen implements Screen {
 
         utils = Utils.getInstance();
         if (utils.getLevel() > 5) {
+            titleLabel.setText("CONGRATULATIONS!!!");
             playAgainLabel.setText("You have explored the land successfully!!!\n\n\t   The next land is: ASTARTE");
         }
     }
@@ -72,7 +73,7 @@ public class LevelCompletedScreen implements Screen {
                 game.changeScreen(Constants.MAP);
                 dispose();
             } else {
-                game.setScreen(new PlayScreen(game));
+                game.setScreen(new StorylineScreen(game));
                 dispose();
             }
 

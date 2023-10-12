@@ -21,7 +21,7 @@ public class Utils {
     private boolean playerHasKey;
     private boolean completeRequest;
     private boolean isMap1, isMap2, isMap3, isMap4, isMap5;
-    private int level;
+    private int level, levelPassed;
 
     public static TextureRegion getRegion(String path) {
         return new TextureRegion(new Texture(Gdx.files.internal(path)));
@@ -117,5 +117,13 @@ public class Utils {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getLevelPassed() {
+        return levelPassed;
+    }
+
+    public void setLevelPassed(int levelPassed) {
+        this.levelPassed = levelPassed;
     }
 }
