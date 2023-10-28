@@ -1,7 +1,8 @@
-package com.mygdx.game;
+package com.mygdx.game.Tools;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Tools.Utils;
 
 public class MapManager {

@@ -9,9 +9,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Sprites.Items.ChestKey;
+import com.mygdx.game.Sprites.Items.Prize.ChestKey;
 import com.mygdx.game.Sprites.Items.ItemDef;
-import com.mygdx.game.Sprites.Items.Maps.SmallMap4;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.Utils;
 

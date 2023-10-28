@@ -20,7 +20,7 @@ import com.mygdx.game.Sprites.Enemies.PinkStar;
 import com.mygdx.game.Sprites.Enemies.RedTotem;
 import com.mygdx.game.Sprites.Enemies.Seashell;
 import com.mygdx.game.Sprites.Enemies.Shark;
-import com.mygdx.game.Sprites.Items.Treasure;
+import com.mygdx.game.Sprites.Items.Prize.Treasure;
 import com.mygdx.game.Sprites.NPC.BaldPirate;
 import com.mygdx.game.Sprites.NPC.BigGuy;
 import com.mygdx.game.Sprites.NPC.BombGuy;

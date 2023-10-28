@@ -5,7 +5,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Sprites.Items.ChestKey;
+import com.mygdx.game.Sprites.Items.Prize.ChestKey;
 import com.mygdx.game.Sprites.Items.Maps.BigMap;
 import com.mygdx.game.Sprites.Items.Maps.SmallMap1;
 import com.mygdx.game.Sprites.Items.Maps.SmallMap2;

@@ -3,7 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Screens.MapScreen;
 import com.mygdx.game.Screens.MenuScreen;
@@ -11,6 +10,7 @@ import com.mygdx.game.Screens.OptionScreen;
 import com.mygdx.game.Screens.PlayScreen;
 import com.mygdx.game.Screens.StatisticScreen;
 import com.mygdx.game.Screens.StorylineScreen;
+import com.mygdx.game.Tools.AudioManager;
 import com.mygdx.game.Tools.Utils;
 
 public class MyGdxGame extends Game {

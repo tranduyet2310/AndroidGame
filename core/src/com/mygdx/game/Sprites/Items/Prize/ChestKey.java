@@ -1,4 +1,4 @@
-package com.mygdx.game.Sprites.Items;
+package com.mygdx.game.Sprites.Items.Prize;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Constants;
 import com.mygdx.game.Screens.PlayScreen;
+import com.mygdx.game.Sprites.Items.Item;
 import com.mygdx.game.Sprites.Player;
 import com.mygdx.game.Tools.Utils;
 
